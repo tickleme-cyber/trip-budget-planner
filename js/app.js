@@ -324,7 +324,7 @@ class TripBudgetApp {
         // Add traveler
         document.getElementById('openAddTravelerModalBtn').addEventListener('click', () => this.#openTravelerModal());
 
-        // Viva guide
+        // System Architecture Guide
         document.getElementById('openVivaBtn').addEventListener('click', () => this.#openModal('vivaModal'));
 
         // Demo login

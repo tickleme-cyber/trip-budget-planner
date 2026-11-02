@@ -1,11 +1,11 @@
-# PowerShell Launcher for TripBudget Java PBL Project
+# PowerShell Launcher for TripBudget Java Application
 $ErrorActionPreference = "Stop"
 
 Write-Host "===================================================" -ForegroundColor Cyan
-Write-Host "  TripBudget Planner - Java PBL Evaluation Launcher" -ForegroundColor Cyan
+Write-Host "  Trip Budget Planner - Java Desktop Application   " -ForegroundColor Cyan
 Write-Host "===================================================" -ForegroundColor Cyan
 
-$WorkspaceRoot = "d:\aoops"
+$WorkspaceRoot = $PSScriptRoot
 Set-Location $WorkspaceRoot
 
 $CandidateJavac = @(
@@ -26,24 +26,27 @@ if ($JavacPath) {
 }
 
 if (-not $JavacPath) {
-    Write-Error "JDK compiler (javac.exe) not found."
+    Write-Error "JDK compiler (javac.exe) not found. Please install JDK 17+ or add it to PATH."
     exit 1
 }
 
 Write-Host "[1/3] Using JDK Compiler: $JavacPath" -ForegroundColor Green
 
 # Create bin directory
-if (-not (Test-Path "d:\aoops\java\bin")) {
-    New-Item -ItemType Directory -Path "d:\aoops\java\bin" -Force | Out-Null
+$BinDir = Join-Path $WorkspaceRoot "java\bin"
+$SrcDir = Join-Path $WorkspaceRoot "java\src"
+
+if (-not (Test-Path $BinDir)) {
+    New-Item -ItemType Directory -Path $BinDir -Force | Out-Null
 }
 
 # Collect source files
-$SourceFiles = (Get-ChildItem -Path "d:\aoops\java\src" -Filter "*.java" -Recurse).FullName
+$SourceFiles = (Get-ChildItem -Path $SrcDir -Filter "*.java" -Recurse).FullName
 Write-Host "[2/3] Compiling $($SourceFiles.Count) Java source files..." -ForegroundColor Yellow
 
-& $JavacPath -d "d:\aoops\java\bin" $SourceFiles
+& $JavacPath -d $BinDir $SourceFiles
 Write-Host "[2/3] Compilation SUCCESS!" -ForegroundColor Green
 
 Write-Host "[3/3] Launching TripBudget Application GUI..." -ForegroundColor Cyan
-Start-Process -FilePath $JavaPath -ArgumentList "-cp d:\aoops\java\bin com.tripbudget.Main"
+Start-Process -FilePath $JavaPath -ArgumentList "-cp `"$BinDir`" com.tripbudget.Main"
 Write-Host "[DONE] TripBudget GUI is now running!" -ForegroundColor Green

@@ -1,9 +1,9 @@
 @echo off
 setlocal
-title TripBudget Planner - Java PBL Project
+title Trip Budget Planner - Java Desktop Application
 
 echo ===================================================
-echo   TripBudget Planner - Java PBL Evaluation Launcher
+echo   Trip Budget Planner - Java Desktop Application   
 echo ===================================================
 
 cd /d "%~dp0"

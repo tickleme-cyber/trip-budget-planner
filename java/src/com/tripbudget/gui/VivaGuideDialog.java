@@ -5,11 +5,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * Viva Guide Dialog - Displays mapping to PBL Rubric (GUI Design, Database Design, JDBC Connection)
+ * System Architecture Dialog - Displays Technical Architecture, Design Patterns, and Database Specifications
  */
 public class VivaGuideDialog extends JDialog {
     public VivaGuideDialog(Frame parent) {
-        super(parent, "PBL College Evaluation & Viva Cheatsheet", true);
+        super(parent, "Trip Budget Planner - Technical Architecture & Specifications", true);
         setSize(700, 560);
         setLocationRelativeTo(parent);
 
@@ -17,7 +17,7 @@ public class VivaGuideDialog extends JDialog {
         mainPanel.setBackground(new Color(15, 23, 42));
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JLabel lblTitle = new JLabel("🎓 PBL Evaluation Rubric & Viva Guide");
+        JLabel lblTitle = new JLabel("📐 System Architecture & Engineering Design");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitle.setForeground(Color.WHITE);
         mainPanel.add(lblTitle, BorderLayout.NORTH);
@@ -30,31 +30,31 @@ public class VivaGuideDialog extends JDialog {
         txt.setMargin(new Insets(10, 10, 10, 10));
 
         String content = "=================================================================\n"
-                + "1. GUI DESIGN (5 MARKS)\n"
+                + "1. GUI PRESENTATION LAYER (JAVA SWING / AWT)\n"
                 + "=================================================================\n"
-                + "• Framework: Java Swing / AWT (LoginFrame, DashboardFrame, Dialogs)\n"
-                + "• Components: JTable, JProgressBar, JComboBox, JDialog, Custom Cards\n"
-                + "• Features: Form validation, responsive layout, real-time KPI metrics\n\n"
+                + "• Windows: LoginFrame, DashboardFrame, AddExpenseDialog, SplitDialog\n"
+                + "• Components: JTable, JProgressBar, JComboBox, JDialog, Custom KPI Cards\n"
+                + "• Features: Real-time budget progress bar, multi-criteria filtering, input validation\n\n"
                 + "=================================================================\n"
-                + "2. DATABASE DESIGN (5 MARKS)\n"
+                + "2. RELATIONAL DATABASE SCHEMA (3NF NORMALIZATION)\n"
                 + "=================================================================\n"
-                + "• Relational Tables: users, trips, travelers, expenses, expense_splits\n"
-                + "• Constraints: Primary Keys, Foreign Keys with ON DELETE CASCADE, CHECK\n"
-                + "• Normalization: 3NF Relational Structure avoiding data duplication\n\n"
+                + "• Tables: users, trips, travelers, expenses, expense_splits\n"
+                + "• Constraints: Primary Keys, Foreign Keys with ON DELETE CASCADE, CHECK rules\n"
+                + "• Integrity: 3NF design ensuring zero data anomalies and isolated entity lifecycles\n\n"
                 + "=================================================================\n"
-                + "3. JDBC CONNECTION (5 MARKS)\n"
+                + "3. PERSISTENCE & DATA ACCESS LAYER (JDBC / DAO)\n"
                 + "=================================================================\n"
-                + "• Driver: SQLite JDBC / MySQL Connector (Class.forName)\n"
-                + "• Pattern: Singleton Pattern in DBConnection.java\n"
-                + "• Security: PreparedStatement for parameterized queries against SQLi\n"
-                + "• Architecture: DAO Pattern (UserDAO, TripDAO, ExpenseDAO, TravelerDAO)\n\n"
+                + "• Driver: SQLite JDBC / MySQL Connector with automatic fallback\n"
+                + "• Pattern: Singleton Pattern for thread-safe DBConnection pooling\n"
+                + "• Security: Parameterized PreparedStatements defending against SQL injection\n"
+                + "• DAOs: UserDAO, TripDAO, ExpenseDAO, TravelerDAO cleanly isolating data access\n\n"
                 + "=================================================================\n"
-                + "4. OOP CONCEPTS HIGHLIGHTS\n"
+                + "4. OBJECT-ORIENTED DOMAIN MODEL & DESIGN PATTERNS\n"
                 + "=================================================================\n"
-                + "• Encapsulation: Private fields + getters/setters in Destination, User & Traveler\n"
+                + "• Encapsulation: Strict private fields + verified mutators in models\n"
                 + "• Inheritance: FlightExpense, HotelExpense, FoodExpense extend Expense\n"
-                + "• Polymorphism: Overriding calculateTotalAmount() in subclasses\n"
-                + "• Composition: Trip coordinates Lists of Travelers and Expenses\n"
+                + "• Polymorphism: Dynamic runtime dispatch over calculateTotalAmount()\n"
+                + "• Composition: Trip orchestrates aggregate collections of Travelers & Expenses\n"
                 + "• Strategy Pattern: TravelStrategy (Backpacker, Moderate, Luxury) for dynamic cost estimation\n"
                 + "• Recommendation System: Multi-criteria destination advisor matching user budget\n";
 
@@ -64,7 +64,7 @@ public class VivaGuideDialog extends JDialog {
         JScrollPane scroll = new JScrollPane(txt);
         mainPanel.add(scroll, BorderLayout.CENTER);
 
-        JButton btnClose = new JButton("Close Guide");
+        JButton btnClose = new JButton("Close Specifications");
         btnClose.setBackground(new Color(99, 102, 241));
         btnClose.setForeground(Color.WHITE);
         btnClose.addActionListener(e -> dispose());

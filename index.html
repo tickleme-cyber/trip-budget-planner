@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TripBudget Planner — OOP College Project</title>
-    <meta name="description" content="Trip Budget Planner built with OOP principles — manage expenses, split costs, and track budgets for group trips.">
+    <title>Trip Budget Planner — Smart Travel &amp; Expense Settlement</title>
+    <meta name="description" content="Trip Budget Planner — manage expenses, split group costs, and get budget recommendations.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,11 +94,11 @@
             </ul>
 
             <div class="sidebar-footer">
-                <button type="button" class="viva-btn" id="openVivaBtn" title="OOP Viva Guide">
+                <button type="button" class="viva-btn" id="openVivaBtn" title="System Architecture">
                     <span class="nav-icon">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                     </span>
-                    <span class="nav-label">OOP Viva Guide</span>
+                    <span class="nav-label">Architecture</span>
                 </button>
             </div>
         </aside>
@@ -886,19 +886,19 @@
         </div>
     </div>
 
-    <!-- 4. OOP Viva & Architecture Guide Modal -->
+    <!-- 4. System Architecture Guide Modal -->
     <div class="modal-overlay" id="vivaModal">
         <div class="modal" style="max-width:760px;">
             <div class="modal-header">
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-size:20px;">🎓</span>
-                    <h3 class="modal-title">OOP Architecture &amp; Viva Guide</h3>
+                    <span style="font-size:20px;">📐</span>
+                    <h3 class="modal-title">System Architecture &amp; Engineering Design</h3>
                 </div>
                 <button type="button" class="modal-close" data-close="vivaModal">&times;</button>
             </div>
             <div class="modal-body viva-modal-content">
                 <p style="color:var(--text-secondary);font-size:13px;">
-                    This project was architected strictly around core <strong>Object-Oriented Programming (OOP)</strong> principles. Use this cheat sheet to confidently answer questions during your college practical/viva exam.
+                    This project is engineered strictly around core <strong>Object-Oriented Programming (OOP)</strong> principles and modern software patterns. Explore the architectural layers, domain models, and algorithmic designs below.
                 </p>
 
                 <div class="oop-concept-card">
@@ -1024,7 +1024,7 @@ class LuxuryStrategy extends TravelStrategy {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-close="vivaModal">Got It! 🎓</button>
+                <button type="button" class="btn btn-primary" data-close="vivaModal">Got It! ✨</button>
             </div>
         </div>
     </div>
@@ -1041,7 +1041,7 @@ class LuxuryStrategy extends TravelStrategy {
             </div>
             <div class="modal-body">
                 <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">
-                    Simulate user login for college PBL evaluation. Auto-fill demo credentials below.
+                    Test all features using the pre-configured demo account below.
                 </p>
                 <form id="demoLoginForm">
                     <div class="form-group">
@@ -1055,14 +1055,14 @@ class LuxuryStrategy extends TravelStrategy {
                     <div class="form-group">
                         <label class="form-label" for="demoRole">Role</label>
                         <select id="demoRole" class="form-control">
-                            <option value="Student / Evaluator">Student / Evaluator</option>
                             <option value="Trip Organizer">Trip Organizer</option>
+                            <option value="Administrator">Administrator</option>
                             <option value="Traveler">Traveler</option>
                         </select>
                     </div>
                     <div style="background:rgba(99,102,241,0.1);border:1px dashed #6366F1;border-radius:8px;padding:12px;margin-top:12px;">
                         <div style="font-size:12px;color:#A5B4FC;line-height:1.5;">
-                            💡 <strong>PBL Architecture Note:</strong><br>
+                            💡 <strong>Architecture Note:</strong><br>
                             • Full Java Swing GUI + SQLite/MySQL JDBC implementation is in <code>java/</code>.<br>
                             • Run <code>.\run_java.ps1</code> or <code>run_java.bat</code> to launch the Java Desktop application!
                         </div>

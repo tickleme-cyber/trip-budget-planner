@@ -71,7 +71,7 @@ public class DashboardFrame extends JFrame {
         lblWelcome.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         lblWelcome.setForeground(new Color(148, 163, 184));
 
-        JButton btnViva = new JButton("🎓 PBL Rubric Guide");
+        JButton btnViva = new JButton("📐 Architecture Guide");
         btnViva.setBackground(new Color(30, 41, 59));
         btnViva.setForeground(new Color(165, 180, 252));
         btnViva.setFocusPainted(false);
