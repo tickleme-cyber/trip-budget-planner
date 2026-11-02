@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripBudget Planner — OOP College Project</title>
+    <meta name="description" content="Trip Budget Planner built with OOP principles — manage expenses, split costs, and track budgets for group trips.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Interactive Constellation Starfield Canvas -->
+    <canvas id="starfieldCanvas"></canvas>
+
+    <!-- Top page-load progress bar -->
+    <div id="topProgressBar"></div>
+
+    <div class="app-container">
+        <!-- ══ Sidebar Navigation ══════════════════════════════════════════ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                </div>
+                <div class="brand-text">
+                    <h1 class="brand-title">Trip Budget Planner</h1>
+                    <span class="brand-badge">OOP Architecture</span>
+                </div>
+                <button type="button" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Collapse sidebar">‹</button>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item active" data-view="dashboard">
+                    <button type="button" title="Dashboard">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+                        </span>
+                        <span class="nav-label">Dashboard</span>
+                    </button>
+                </li>
+                <li class="nav-item" data-view="trips">
+                    <button type="button" title="Trips">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                        </span>
+                        <span class="nav-label">Trips</span>
+                    </button>
+                </li>
+                <li class="nav-item" data-view="expenses">
+                    <button type="button" title="Expenses">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                        </span>
+                        <span class="nav-label">Expenses</span>
+                    </button>
+                </li>
+                <li class="nav-item" data-view="travelers">
+                    <button type="button" title="Travelers">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </span>
+                        <span class="nav-label">Travelers</span>
+                    </button>
+                </li>
+                <li class="nav-item" data-view="split">
+                    <button type="button" title="Split Expenses">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+                        </span>
+                        <span class="nav-label">Split Expenses</span>
+                    </button>
+                </li>
+                <li class="nav-item" data-view="analytics">
+                    <button type="button" title="Analytics">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </span>
+                        <span class="nav-label">Analytics</span>
+                    </button>
+                </li>
+                <li class="nav-item" data-view="recommendations">
+                    <button type="button" title="Where Can I Go? (Budget Recommendations)">
+                        <span class="nav-icon">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"></polygon></svg>
+                        </span>
+                        <span class="nav-label">Where Can I Go?</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;background:rgba(253,224,71,0.18);color:#FDE047;border:1px solid rgba(253,224,71,0.35);padding:1px 5px;border-radius:4px;margin-left:auto;">AI</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button type="button" class="viva-btn" id="openVivaBtn" title="OOP Viva Guide">
+                    <span class="nav-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    </span>
+                    <span class="nav-label">OOP Viva Guide</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ══ Main Workspace ════════════════════════════════════════════ -->
+        <div class="main-wrapper" id="mainWrapper">
+            <!-- Astronomical Telemetry HUD (Star Party Aesthetic) -->
+            <div class="astronomical-hud">
+                <div class="hud-left">
+                    <span class="hud-pulse"></span>
+                    <span class="hud-mono" id="hudLocation">GOA EXPEDITION · 15.2993° N, 74.1240° E</span>
+                </div>
+                <div class="hud-center">
+                    <span class="hud-mono" id="hudDateTime">LIVE UTC 12:59:01 · 2026-11-01 18:29:01 IST</span>
+                </div>
+                <div class="hud-right">
+                    <span class="hud-mono" id="hudConstellation">CELESTIAL SECTOR: CYGNUS · ALT 48°</span>
+                    <button type="button" class="btn-hud-link" id="whatAmILookingAtBtn">WHAT AM I LOOKING AT?</button>
+                </div>
+            </div>
+
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <div class="trip-selector-container">
+                    <span class="trip-label">✦ Active Expedition:</span>
+                    <select id="activeTripSelect" class="trip-select" aria-label="Select active trip"></select>
+                </div>
+
+                <div class="topbar-actions">
+                    <!-- Utility Tools Cluster -->
+                    <div class="action-btn-group" title="Expedition Utilities">
+                        <button type="button" class="btn-icon-top" id="openCurrencyBtn" title="Currency Converter">💱</button>
+                        <button type="button" class="btn-icon-top" id="openActivityBtn" title="Timeline Activity Feed">📋</button>
+                        <button type="button" class="btn-icon-top" id="themeToggleBtn" title="Toggle dark / light mode">🌙</button>
+                    </div>
+
+                    <div class="topbar-divider"></div>
+
+                    <!-- User Session Cluster -->
+                    <div class="action-btn-group">
+                        <button type="button" class="btn btn-secondary" id="openLoginModalBtn" title="Demo User Authentication">
+                            <span>👤</span>
+                            <span id="userProfileLabel">Demo Login</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetDemoBtn" title="Reset sample trip data">
+                            <span>🔄</span>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+
+                    <div class="topbar-divider"></div>
+
+                    <!-- Primary Action -->
+                    <button type="button" class="btn btn-primary btn-cta" id="quickAddExpenseBtn">
+                        <span>➕</span>
+                        <span>Add Expense</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="content-area">
+
+                <!-- ═══ DASHBOARD VIEW ═══════════════════════════════════ -->
+                <section id="view-dashboard" class="view-section active">
+                    <!-- Dashboard Header & Actions -->
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2 id="dashTripName">Trip Dashboard</h2>
+                            <p class="view-subtitle" id="dashTripDetails">Track budget, spending, and split status</p>
+                        </div>
+                        <div class="view-header-actions">
+                            <button type="button" class="btn btn-secondary" id="editCurrentTripBtn">
+                                <span>✏️</span><span>Edit Trip</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cloneCurrentTripBtn" title="Duplicate this trip">
+                                <span>📋</span><span>Clone Trip</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Total Budget</span>
+                                <div class="metric-icon-wrap" style="background: rgba(99,102,241,0.15); color:#6366F1;">💰</div>
+                            </div>
+                            <div class="metric-value" id="metricTotalBudget">$0.00</div>
+                            <div class="metric-sub" id="metricBudgetSub">Target budget limit</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Total Spent</span>
+                                <div class="metric-icon-wrap" style="background: rgba(239,68,68,0.15); color:#EF4444;">💸</div>
+                            </div>
+                            <div class="metric-value" id="metricTotalSpent">$0.00</div>
+                            <div class="metric-sub" id="metricSpentSub">0 expenses recorded</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Remaining</span>
+                                <div class="metric-icon-wrap" style="background: rgba(16,185,129,0.15); color:#10B981;">🛡️</div>
+                            </div>
+                            <div class="metric-value" id="metricRemainingBudget">$0.00</div>
+                            <div class="metric-sub" id="metricRemainingSub">Available funds</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Budget Used</span>
+                                <div class="metric-icon-wrap" style="background: rgba(245,158,11,0.15); color:#F59E0B;">📈</div>
+                            </div>
+                            <div class="metric-value" id="metricUsagePct">0%</div>
+                            <div class="metric-sub" id="metricUsageSub">Consumption rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Travel Advisor Quick Banner -->
+                    <div class="rec-banner-dash" id="dashRecBanner">
+                        <div class="rec-banner-content">
+                            <div class="rec-banner-icon">🧭</div>
+                            <div class="rec-banner-text">
+                                <div class="rec-banner-title">Where can your budget take you?</div>
+                                <div class="rec-banner-desc">Explore tailored destinations matching your <span id="dashRecBudgetHighlight" style="color:#FDE047;font-weight:700;">$0.00</span> budget with categorized cost estimates.</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="dashExploreRecBtn">
+                            <span>Explore Destinations</span> <span>→</span>
+                        </button>
+                    </div>
+
+                    <!-- Budget Progress Bar -->
+                    <div class="budget-progress-card">
+                        <div class="progress-header">
+                            <div class="progress-title-wrap">
+                                <h3>Budget Consumption</h3>
+                            </div>
+                            <span class="progress-status-badge badge-safe" id="budgetStatusBadge">On Track</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-bar-fill" id="dashboardProgressBar" style="width:0%; background-color:var(--success);"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span id="progressSpentLabel">$0.00 Spent</span>
+                            <span id="progressBudgetLabel">$0.00 Budget</span>
+                        </div>
+                        <div id="budgetWarningBanner" style="display:none;"></div>
+                    </div>
+
+                    <!-- Cosmic Destinations Filmstrip (Star Party Panoramic Strip) -->
+                    <div class="filmstrip-section">
+                        <div class="filmstrip-header">
+                            <span class="filmstrip-label">✦ LOOK UP // EXPEDITIONS ARCHIVE</span>
+                            <span class="filmstrip-tag">@TRIPBUDGET_EXPEDITIONS</span>
+                        </div>
+                        <div class="filmstrip-scroll">
+                            <div class="film-card active">
+                                <div class="film-photo photo-goa">
+                                    <div class="film-badge">ACTIVE EXPEDITION</div>
+                                </div>
+                                <div class="film-info">
+                                    <div class="film-name">GOA COASTAL RETREAT</div>
+                                    <div class="film-coords">15.2993° N · 74.1240° E</div>
+                                </div>
+                            </div>
+                            <div class="film-card">
+                                <div class="film-photo photo-alps">
+                                    <div class="film-badge">UPCOMING</div>
+                                </div>
+                                <div class="film-info">
+                                    <div class="film-name">ALPINE OBSERVATORY</div>
+                                    <div class="film-coords">45.9237° N · 6.8694° E</div>
+                                </div>
+                            </div>
+                            <div class="film-card">
+                                <div class="film-photo photo-kyoto">
+                                    <div class="film-badge">RECON</div>
+                                </div>
+                                <div class="film-info">
+                                    <div class="film-name">KYOTO ZEN HORIZON</div>
+                                    <div class="film-coords">35.0116° N · 135.7681° E</div>
+                                </div>
+                            </div>
+                            <div class="film-card">
+                                <div class="film-photo photo-atacama">
+                                    <div class="film-badge">COMING SOON</div>
+                                </div>
+                                <div class="film-info">
+                                    <div class="film-name">ATACAMA COSMIC CAMP</div>
+                                    <div class="film-coords">23.8634° S · 69.1328° W</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Two-Column Grid -->
+                    <div class="dashboard-grid">
+                        <!-- Recent Expenses -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Expenses</h3>
+                                <button type="button" class="btn btn-secondary btn-icon" id="viewAllExpensesBtn" title="View all expenses">➔</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Expense</th>
+                                            <th>Category</th>
+                                            <th>Payer</th>
+                                            <th>Total Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentExpensesTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Category Breakdown Donut -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Category Breakdown</h3>
+                            </div>
+                            <div class="chart-container">
+                                <svg class="donut-chart-svg" viewBox="0 0 100 100" id="categoryDonutSvg">
+                                    <circle cx="50" cy="50" r="38" stroke="#334155" />
+                                </svg>
+                                <div class="donut-center-text">
+                                    <div class="donut-center-amount" id="donutTotalAmount">$0</div>
+                                    <div class="donut-center-label">Total Spent</div>
+                                </div>
+                            </div>
+                            <div class="category-bars-list" id="categoryBarsContainer"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ═══ TRIPS VIEW ════════════════════════════════════════ -->
+                <section id="view-trips" class="view-section">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Trip Management</h2>
+                            <p class="view-subtitle">Create new trips or switch between vacation plans</p>
+                        </div>
+                        <div class="trip-actions-bar">
+                            <button type="button" class="btn btn-secondary" id="tripsExploreRecBtn" title="Explore destinations matching your budget">
+                                <span>🧭</span><span>Where Can I Go?</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="exportCsvBtn" title="Export current trip as CSV">
+                                <span>⬇️</span><span>Export CSV</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="exportPdfBtn" title="Export current trip report">
+                                <span>📄</span><span>Export PDF</span>
+                            </button>
+                            <button type="button" class="btn btn-primary" id="openCreateTripModalBtn">
+                                <span>➕</span><span>Create New Trip</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="trips-grid" id="tripsGrid"></div>
+                </section>
+
+                <!-- ═══ EXPENSES VIEW ══════════════════════════════════════ -->
+                <section id="view-expenses" class="view-section">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Expense Management</h2>
+                            <p class="view-subtitle">Add, edit, inspect polymorphic costs and delete expenses</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="openAddExpenseModalBtn">
+                            <span>➕</span><span>Add Expense</span>
+                        </button>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="filter-bar filter-bar-enhanced">
+                        <div class="filter-bar-top">
+                            <div class="search-input-wrap">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="expenseSearchInput" class="form-control" placeholder="Search expenses by title or notes…">
+                            </div>
+                            <select id="expenseCategoryFilter" class="form-control" style="max-width:190px;">
+                                <option value="ALL">All Categories</option>
+                                <option value="Flight">✈️ Flight</option>
+                                <option value="Hotel">🏨 Hotel</option>
+                                <option value="Food">🍽️ Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Activities">🏄 Activities</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Other">📦 Other</option>
+                            </select>
+                            <select id="expenseSortFilter" class="form-control" style="max-width:160px;">
+                                <option value="date-desc">Newest First</option>
+                                <option value="date-asc">Oldest First</option>
+                                <option value="amount-desc">Highest Amount</option>
+                                <option value="amount-asc">Lowest Amount</option>
+                            </select>
+                        </div>
+                        <div class="category-chips-scroll" id="expenseCategoryChips">
+                            <button type="button" class="category-chip-btn active" data-cat="ALL"><span>✦</span><span>All</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Flight"><span>✈️</span><span>Flights</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Hotel"><span>🏨</span><span>Hotels</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Food"><span>🍽️</span><span>Food &amp; Dining</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Transport"><span>🚗</span><span>Transport</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Activities"><span>🏄</span><span>Activities</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Shopping"><span>🛍️</span><span>Shopping</span></button>
+                            <button type="button" class="category-chip-btn" data-cat="Other"><span>📦</span><span>Other</span></button>
+                        </div>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="expense-telemetry-strip" id="expenseTelemetryStrip">
+                            <div class="telemetry-pill">
+                                <span>📊 Ledger:</span>
+                                <span class="telemetry-val" id="expenseLedgerCount">0 expenses</span>
+                            </div>
+                            <div class="telemetry-pill">
+                                <span>💳 Total Polymorphic Spend:</span>
+                                <span class="telemetry-val" id="expenseLedgerSum" style="color:var(--success);">$0.00</span>
+                            </div>
+                            <div class="telemetry-pill" id="expenseLedgerAvgPill" style="display:none;">
+                                <span>📈 Average:</span>
+                                <span class="telemetry-val" id="expenseLedgerAvg">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Payer</th>
+                                        <th>Split With</th>
+                                        <th>Base Amount</th>
+                                        <th>Total Cost (Polymorphic)</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allExpensesTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ═══ TRAVELERS VIEW ════════════════════════════════════ -->
+                <section id="view-travelers" class="view-section">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Travelers &amp; Companions</h2>
+                            <p class="view-subtitle">Manage travelers participating in the active trip</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="openAddTravelerModalBtn">
+                            <span>➕</span><span>Add Traveler</span>
+                        </button>
+                    </div>
+                    <div class="travelers-grid" id="travelersGrid"></div>
+                </section>
+
+                <!-- ═══ SPLIT EXPENSES VIEW ═══════════════════════════════ -->
+                <section id="view-split" class="view-section">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Expense Splitting &amp; Settlement</h2>
+                            <p class="view-subtitle">Equally split expenses, check net balances and view Who Owes Whom</p>
+                        </div>
+                    </div>
+
+                    <!-- Who Owes Whom Card -->
+                    <div class="card table-card" style="margin-bottom:24px;">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">🤝 Who Owes Whom (Simplified Settlement)</h3>
+                                <p class="view-subtitle">Optimal transactions via greedy min-cash-flow algorithm</p>
+                            </div>
+                        </div>
+                        <div id="whoOwesWhomContainer" style="padding:4px 18px 18px 18px;"></div>
+                    </div>
+
+                    <!-- Balances Table -->
+                    <div class="card table-card" style="margin-bottom:24px;">
+                        <div class="card-header">
+                            <h3 class="card-title">📊 Individual Traveler Balances</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Traveler</th>
+                                        <th>Total Paid</th>
+                                        <th>Total Fair Share</th>
+                                        <th>Net Balance</th>
+                                        <th style="text-align:right;">Settlement Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="balancesTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Single Expense Split Inspector -->
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">🔍 Inspect Single Expense Split</h3>
+                                <p class="view-subtitle">Select an expense to inspect how it was divided among friends</p>
+                            </div>
+                            <select id="splitExpenseSelector" class="form-control" style="max-width:320px;"></select>
+                        </div>
+                        <div id="singleExpenseSplitResult" style="padding:0 18px 18px 18px;"></div>
+                    </div>
+                </section>
+
+                <!-- ═══ ANALYTICS VIEW ════════════════════════════════════ -->
+                <section id="view-analytics" class="view-section">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Analytics &amp; Insights</h2>
+                            <p class="view-subtitle">Visual spending trends and trip statistics</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <!-- Daily Spending Bar Chart -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">📅 Daily Spending</h3>
+                            </div>
+                            <div id="dailyBarChart" style="padding:8px 0;"></div>
+                        </div>
+
+                        <!-- Per-Category Summary -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">🏷️ Spending by Category</h3>
+                            </div>
+                            <div id="analyticsCategories" style="padding:8px 0;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Top Spenders -->
+                    <div class="card" style="margin-top:22px;">
+                        <div class="card-header">
+                            <h3 class="card-title">🏆 Top Spenders (Payers)</h3>
+                        </div>
+                        <div id="topSpendersContainer"></div>
+                    </div>
+                </section>
+
+                <!-- ═══ WHERE CAN I GO? (RECOMMENDATIONS VIEW) ════════════ -->
+                <section id="view-recommendations" class="view-section">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <span style="font-size:26px;">🧭</span>
+                                <div>
+                                    <h2>Where Can I Go? — Budget Travel Advisor</h2>
+                                    <p class="view-subtitle">Enter your budget to discover perfectly matched destinations, itemized cost breakdowns, and 1-click trip creation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rec-header-actions">
+                            <button type="button" class="btn btn-secondary" id="recMatchCurrentTripBtn" title="Auto-fill with currently active trip's budget">
+                                <span>🎯</span><span>Use Current Trip Budget</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Budget & Preferences Control Deck -->
+                    <div class="rec-control-deck">
+                        <div class="rec-deck-grid">
+                            <!-- Left: Budget & Travelers & Duration -->
+                            <div class="rec-deck-col">
+                                <div class="form-group">
+                                    <div class="rec-label-row">
+                                        <label class="form-label" for="recBudgetInput" style="font-weight:600;display:flex;align-items:center;gap:6px;">
+                                            <span>💰</span><span>Target Trip Budget</span>
+                                        </label>
+                                        <div class="rec-currency-badge-wrap">
+                                            <span style="font-size:11px;color:var(--text-muted);">Currency:</span>
+                                            <select id="recCurrencySelect" class="form-control form-control-sm" style="width:auto;display:inline-block;padding:2px 8px;font-size:12px;">
+                                                <option value="USD" selected>USD ($)</option>
+                                                <option value="INR">INR (₹)</option>
+                                                <option value="EUR">EUR (€)</option>
+                                                <option value="GBP">GBP (£)</option>
+                                                <option value="AED">AED (د.إ)</option>
+                                                <option value="SGD">SGD (S$)</option>
+                                                <option value="JPY">JPY (¥)</option>
+                                                <option value="CAD">CAD (C$)</option>
+                                                <option value="AUD">AUD (A$)</option>
+                                                <option value="THB">THB (฿)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="rec-budget-input-wrapper">
+                                        <span class="rec-currency-symbol" id="recCurrencySymbolLabel">$</span>
+                                        <input type="number" id="recBudgetInput" class="form-control rec-budget-field" min="50" step="50" value="1500" placeholder="1500">
+                                    </div>
+                                    <!-- Budget Range Slider -->
+                                    <div class="rec-slider-wrap">
+                                        <input type="range" id="recBudgetSlider" min="100" max="6000" step="50" value="1500" class="rec-range-slider">
+                                        <div class="rec-slider-bounds">
+                                            <span id="recSliderMinLabel">$100</span>
+                                            <span id="recSliderCurrentLabel">$1,500</span>
+                                            <span id="recSliderMaxLabel">$6,000+</span>
+                                        </div>
+                                    </div>
+                                    <!-- Quick Preset Buttons -->
+                                    <div class="rec-presets-row" id="recPresetsContainer">
+                                        <!-- Dynamically generated based on currency -->
+                                    </div>
+                                </div>
+
+                                <div class="form-row" style="margin-top:14px;">
+                                    <div class="form-group" style="flex:1;">
+                                        <label class="form-label" for="recTravelersCount">👥 Travelers</label>
+                                        <select id="recTravelersCount" class="form-control">
+                                            <option value="1">1 (Solo Traveler)</option>
+                                            <option value="2" selected>2 (Couple / Duo)</option>
+                                            <option value="3">3 (Small Group)</option>
+                                            <option value="4">4 (Friends / Family)</option>
+                                            <option value="6">6+ (Large Group)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="flex:1;">
+                                        <label class="form-label" for="recDurationDays">⏱️ Duration</label>
+                                        <select id="recDurationDays" class="form-control">
+                                            <option value="3">3 Days (Weekend Getaway)</option>
+                                            <option value="5" selected>5 Days (Short Break)</option>
+                                            <option value="7">7 Days (1 Week Vacation)</option>
+                                            <option value="10">10 Days (Extended Tour)</option>
+                                            <option value="14">14 Days (Grand Expedition)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Travel Style (Strategy Pattern) -->
+                                <div class="form-group" style="margin-top:4px;">
+                                    <label class="form-label" style="display:flex;align-items:center;justify-content:space-between;">
+                                        <span>✨ Travel Style (OOP Strategy Pattern)</span>
+                                        <span id="recStrategyHint" style="font-size:11px;color:var(--text-muted);font-weight:normal;">Balanced 3–4★ comfort</span>
+                                    </label>
+                                    <div class="rec-style-toggle" id="recStyleToggle">
+                                        <button type="button" class="rec-style-btn" data-style="backpacker" title="Hostels, local transit, authentic street dining">
+                                            <span class="style-icon">🎒</span>
+                                            <span class="style-title">Backpacker</span>
+                                            <span class="style-sub">Budget Saver</span>
+                                        </button>
+                                        <button type="button" class="rec-style-btn active" data-style="moderate" title="3-4★ hotels, mixed transport, standard dining">
+                                            <span class="style-icon">🧳</span>
+                                            <span class="style-title">Moderate</span>
+                                            <span class="style-sub">Balanced</span>
+                                        </button>
+                                        <button type="button" class="rec-style-btn" data-style="luxury" title="5★ luxury resorts, private tours, fine dining">
+                                            <span class="style-icon">🥂</span>
+                                            <span class="style-title">Luxury</span>
+                                            <span class="style-sub">Premium</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Vibes, Regions, and Fit Filters -->
+                            <div class="rec-deck-col">
+                                <!-- Vibes -->
+                                <div class="form-group">
+                                    <label class="form-label">🌴 Preferred Vibe / Experience</label>
+                                    <div class="rec-filter-chips" id="recVibeChips">
+                                        <button type="button" class="chip active" data-vibe="all">All Vibes</button>
+                                        <button type="button" class="chip" data-vibe="Beach">🏖️ Beach &amp; Islands</button>
+                                        <button type="button" class="chip" data-vibe="Mountain">⛰️ Mountain &amp; Snow</button>
+                                        <button type="button" class="chip" data-vibe="Heritage">🏛️ Heritage &amp; Culture</button>
+                                        <button type="button" class="chip" data-vibe="City">🌆 City &amp; Skyline</button>
+                                        <button type="button" class="chip" data-vibe="Adventure">🏄 Adventure &amp; Sports</button>
+                                        <button type="button" class="chip" data-vibe="Wellness">🧘 Wellness &amp; Nature</button>
+                                        <button type="button" class="chip" data-vibe="Foodie">🍽️ Culinary &amp; Foodie</button>
+                                    </div>
+                                </div>
+
+                                <!-- Regions -->
+                                <div class="form-group" style="margin-top:14px;">
+                                    <label class="form-label">🗺️ Geographic Region</label>
+                                    <div class="rec-filter-chips" id="recRegionChips">
+                                        <button type="button" class="chip active" data-region="all">All Regions</button>
+                                        <button type="button" class="chip" data-region="India">🇮🇳 Domestic / India</button>
+                                        <button type="button" class="chip" data-region="Southeast Asia">🌏 Southeast Asia</button>
+                                        <button type="button" class="chip" data-region="Europe">🏰 Europe</button>
+                                        <button type="button" class="chip" data-region="Middle East">🌴 Middle East &amp; Africa</button>
+                                        <button type="button" class="chip" data-region="East Asia">🇯🇵 East Asia</button>
+                                    </div>
+                                </div>
+
+                                <!-- Fit Filter & Sorting -->
+                                <div class="form-row" style="margin-top:14px;">
+                                    <div class="form-group" style="flex:1;">
+                                        <label class="form-label" for="recFitFilter">🎯 Budget Fit</label>
+                                        <select id="recFitFilter" class="form-control">
+                                            <option value="all" selected>All Matches</option>
+                                            <option value="within">Within Budget Only</option>
+                                            <option value="saver">Budget Savers (≥30% Surplus)</option>
+                                            <option value="stretch">Stretch Goals (≤15% Stretch)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="flex:1;">
+                                        <label class="form-label" for="recSortFilter">⚡ Sort Results</label>
+                                        <select id="recSortFilter" class="form-control">
+                                            <option value="match" selected>Top Match Score</option>
+                                            <option value="cost_asc">Cost: Low to High</option>
+                                            <option value="cost_desc">Cost: High to Low</option>
+                                            <option value="rating">Rating: High to Low</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Summary Telemetry Box -->
+                                <div class="rec-telemetry-box" id="recTelemetrySummary">
+                                    <span class="telemetry-dot"></span>
+                                    <span id="recTelemetryText">Analyzing destinations across our catalog...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destination Recommendations Cards Container -->
+                    <div class="rec-results-header">
+                        <div class="rec-results-count" id="recResultsCount">Showing recommendations</div>
+                        <div class="rec-active-criteria-tags" id="recCriteriaTags"></div>
+                    </div>
+
+                    <div class="rec-grid" id="recommendationsGrid">
+                        <!-- Destination Cards Rendered Here Dynamically -->
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ══ Floating Action Button ═══════════════════════════════════════════ -->
+    <button type="button" id="fab" title="Quick Add Expense">＋</button>
+
+    <!-- ══════════════════ MODALS ══════════════════════════════════════════ -->
+
+    <!-- 1. Trip Modal (Create / Edit) -->
+    <div class="modal-overlay" id="tripModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="tripModalTitle">Create New Trip</h3>
+                <button type="button" class="modal-close" data-close="tripModal">&times;</button>
+            </div>
+            <form id="tripForm">
+                <div class="modal-body">
+                    <input type="hidden" id="tripFormId">
+                    <div class="form-group">
+                        <label class="form-label" for="tripFormName">Trip Name <span class="required">*</span></label>
+                        <input type="text" id="tripFormName" class="form-control" placeholder="e.g. Goa Coastal Getaway" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tripFormDestination">Destination <span class="required">*</span></label>
+                        <input type="text" id="tripFormDestination" class="form-control" placeholder="e.g. Goa, India" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="tripFormStartDate">Start Date</label>
+                            <input type="date" id="tripFormStartDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tripFormEndDate">End Date</label>
+                            <input type="date" id="tripFormEndDate" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tripFormBudget">Total Budget ($) <span class="required">*</span></label>
+                        <input type="number" id="tripFormBudget" class="form-control" min="0" step="0.01" placeholder="e.g. 2500" required>
+                    </div>
+                    <div class="form-group" id="tripTravelersInputGroup">
+                        <label class="form-label" for="tripFormTravelers">Travelers (comma-separated names)</label>
+                        <input type="text" id="tripFormTravelers" class="form-control" placeholder="e.g. Alex, Sarah, David, Priya">
+                        <p class="view-subtitle" style="font-size:11px;margin-top:5px;">Traveler objects will be created automatically.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close="tripModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveTripSubmitBtn">Save Trip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Expense Modal (Add / Edit with Polymorphic Fields) -->
+    <div class="modal-overlay" id="expenseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="expenseModalTitle">Add Expense</h3>
+                <button type="button" class="modal-close" data-close="expenseModal">&times;</button>
+            </div>
+            <form id="expenseForm">
+                <div class="modal-body">
+                    <input type="hidden" id="expenseFormId">
+                    <div class="form-group">
+                        <label class="form-label" for="expenseFormTitle">Expense Description <span class="required">*</span></label>
+                        <input type="text" id="expenseFormTitle" class="form-control" placeholder="e.g. Flight to Goa, Resort Booking" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="expenseFormCategory">Category <span class="required">*</span></label>
+                            <select id="expenseFormCategory" class="form-control" required>
+                                <option value="Flight">✈️ Flight (FlightExpense)</option>
+                                <option value="Hotel">🏨 Hotel (HotelExpense)</option>
+                                <option value="Food">🍽️ Food (FoodExpense)</option>
+                                <option value="Transport">🚗 Transport (TransportExpense)</option>
+                                <option value="Activities">🏄 Activities (ActivitiesExpense)</option>
+                                <option value="Shopping">🛍️ Shopping (ShoppingExpense)</option>
+                                <option value="Other">📦 Other (OtherExpense)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="expenseFormBaseAmount">Base Amount ($) <span class="required">*</span></label>
+                            <input type="number" id="expenseFormBaseAmount" class="form-control" min="0" step="0.01" placeholder="0.00" required>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Polymorphic Fields Container -->
+                    <div class="polymorphic-fields" id="polymorphicFieldsContainer"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="expenseFormDate">Date <span class="required">*</span></label>
+                            <input type="date" id="expenseFormDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="expenseFormPaidBy">Paid By <span class="required">*</span></label>
+                            <select id="expenseFormPaidBy" class="form-control" required></select>
+                        </div>
+                    </div>
+
+                    <!-- Split Among Travelers -->
+                    <div class="form-group">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <label class="form-label" style="margin-bottom:0;">Split With (Participants) <span class="required">*</span></label>
+                            <button type="button" class="btn btn-secondary" id="selectAllParticipantsBtn" style="padding:2px 8px;font-size:11px;">Select All</button>
+                        </div>
+                        <div class="participants-select-list" id="expenseFormParticipantsList"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="expenseFormNotes">Notes / Details</label>
+                        <input type="text" id="expenseFormNotes" class="form-control" placeholder="Optional notes…">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close="expenseModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveExpenseSubmitBtn">Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Traveler Modal (Add Traveler) -->
+    <div class="modal-overlay" id="travelerModal">
+        <div class="modal" style="max-width:440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Traveler</h3>
+                <button type="button" class="modal-close" data-close="travelerModal">&times;</button>
+            </div>
+            <form id="travelerForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="travelerFormName">Name <span class="required">*</span></label>
+                        <input type="text" id="travelerFormName" class="form-control" placeholder="e.g. Jordan Smith" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="travelerFormEmail">Email (Optional)</label>
+                        <input type="email" id="travelerFormEmail" class="form-control" placeholder="e.g. jordan@example.com">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close="travelerModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Traveler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. OOP Viva & Architecture Guide Modal -->
+    <div class="modal-overlay" id="vivaModal">
+        <div class="modal" style="max-width:760px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:20px;">🎓</span>
+                    <h3 class="modal-title">OOP Architecture &amp; Viva Guide</h3>
+                </div>
+                <button type="button" class="modal-close" data-close="vivaModal">&times;</button>
+            </div>
+            <div class="modal-body viva-modal-content">
+                <p style="color:var(--text-secondary);font-size:13px;">
+                    This project was architected strictly around core <strong>Object-Oriented Programming (OOP)</strong> principles. Use this cheat sheet to confidently answer questions during your college practical/viva exam.
+                </p>
+
+                <div class="oop-concept-card">
+                    <div class="oop-concept-header">
+                        <h4>1. Encapsulation</h4>
+                        <span class="oop-badge oop-encapsulation">Implemented</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">
+                        Data hiding and bundling of state and behavior. All model classes (<code>Trip</code>, <code>Expense</code>, <code>Traveler</code>) use strict <strong>private fields</strong> (<code>#id</code>, <code>#totalBudget</code>, <code>#baseAmount</code>) accessible only via validated getters and setters.
+                    </p>
+                    <div class="oop-code-snippet">
+// js/models/Traveler.js
+class Traveler {
+    #id; #name; #email;
+    get name() { return this.#name; }
+    setName(val) { if(!val) throw new Error("Name required"); this.#name = val; }
+}</div>
+                </div>
+
+                <div class="oop-concept-card">
+                    <div class="oop-concept-header">
+                        <h4>2. Inheritance</h4>
+                        <span class="oop-badge oop-inheritance">Implemented</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">
+                        Code reuse through hierarchical classification. <code>Expense</code> is the base class. Subclasses extend it:
+                        <code>FlightExpense</code>, <code>HotelExpense</code>, <code>FoodExpense</code>, <code>TransportExpense</code>, <code>ActivitiesExpense</code>, <code>ShoppingExpense</code>.
+                    </p>
+                    <div class="oop-code-snippet">
+// js/models/ExpenseSubclasses.js
+export class FlightExpense extends Expense {
+    #baggageFee; #airportTax;
+    constructor(params) {
+        super({ ...params, category: 'Flight' });
+        this.#baggageFee = params.baggageFee;
+    }
+}</div>
+                </div>
+
+                <div class="oop-concept-card">
+                    <div class="oop-concept-header">
+                        <h4>3. Polymorphism &amp; Method Overriding</h4>
+                        <span class="oop-badge oop-polymorphism">Implemented</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">
+                        The base class <code>Expense</code> defines <code>calculateTotalCost()</code>. Each subclass overrides this method with category-specific pricing. The Trip iterates polymorphically.
+                    </p>
+                    <div class="oop-code-snippet">
+// Polymorphic method call in Trip.js
+getTotalSpent() {
+    return this.#expenses.reduce((sum, exp) => sum + exp.calculateTotalCost(), 0);
+}</div>
+                </div>
+
+                <div class="oop-concept-card">
+                    <div class="oop-concept-header">
+                        <h4>4. Composition ("HAS-A" Relationship)</h4>
+                        <span class="oop-badge oop-composition">Implemented</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">
+                        A <code>Trip</code> <em>has-a</em> collection of <code>Traveler</code> objects (<code>#travelers = []</code>) and <em>has-a</em> collection of <code>Expense</code> objects (<code>#expenses = []</code>).
+                    </p>
+                    <div class="oop-code-snippet">
+// js/models/Trip.js
+class Trip {
+    #travelers; // Composition: contains Traveler[]
+    #expenses;  // Composition: contains Expense[]
+}</div>
+                </div>
+
+                <div class="oop-concept-card">
+                    <div class="oop-concept-header">
+                        <h4>5. Strategy Pattern &amp; Polymorphic Estimation</h4>
+                        <span class="oop-badge oop-polymorphism">Implemented</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">
+                        The <strong>Budget Recommendation Engine</strong> implements the <strong>Strategy Pattern</strong>. <code>TravelStrategy</code> is the abstract base, extended by <code>BackpackerStrategy</code>, <code>ModerateStrategy</code>, and <code>LuxuryStrategy</code>. Polymorphic cost estimation calculates tailored accommodation, food, and transport multipliers for any budget.
+                    </p>
+                    <div class="oop-code-snippet">
+// js/models/TravelStrategy.js
+class BackpackerStrategy extends TravelStrategy {
+    getStayMultiplier() { return 0.48; } // Hostels
+}
+class LuxuryStrategy extends TravelStrategy {
+    getStayMultiplier() { return 2.25; } // 5★ Resorts
+}</div>
+                </div>
+
+                <div class="oop-concept-card">
+                    <div class="oop-concept-header">
+                        <h4>6. Important Classes in this Project</h4>
+                    </div>
+                    <table style="width:100%;font-size:12px;margin-top:8px;border-collapse:collapse;">
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">Trip</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Encapsulates destination, dates, budget, composition of travelers &amp; expenses</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">Expense</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Base class with encapsulated attributes and calculateTotalCost()</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">Flight / Hotel / Food / Transport Expense</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Derived subclasses with specialized pricing rules and overridden methods</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">Traveler</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Encapsulates traveler identity, initials, and visual color token</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">Destination</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Encapsulates destination benchmarks, vibes, ratings, and cost calculation</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">RecommendationEngine</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Service evaluating budget fit, match scores, and 1-click Trip generation</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px;font-weight:600;color:#818CF8;">ExpenseSplitter</td>
+                            <td style="padding:6px;color:var(--text-secondary);">Service class calculating fair shares, net balances, and greedy debt simplification</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-close="vivaModal">Got It! 🎓</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Demo Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal" style="max-width:480px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:20px;">👤</span>
+                    <h3 class="modal-title">User Authentication (Demo)</h3>
+                </div>
+                <button type="button" class="modal-close" data-close="loginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">
+                    Simulate user login for college PBL evaluation. Auto-fill demo credentials below.
+                </p>
+                <form id="demoLoginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="demoUsername">Username <span class="required">*</span></label>
+                        <input type="text" id="demoUsername" class="form-control" placeholder="e.g. demo" required value="demo">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="demoPassword">Password <span class="required">*</span></label>
+                        <input type="password" id="demoPassword" class="form-control" placeholder="••••••••" required value="demo123">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="demoRole">Role</label>
+                        <select id="demoRole" class="form-control">
+                            <option value="Student / Evaluator">Student / Evaluator</option>
+                            <option value="Trip Organizer">Trip Organizer</option>
+                            <option value="Traveler">Traveler</option>
+                        </select>
+                    </div>
+                    <div style="background:rgba(99,102,241,0.1);border:1px dashed #6366F1;border-radius:8px;padding:12px;margin-top:12px;">
+                        <div style="font-size:12px;color:#A5B4FC;line-height:1.5;">
+                            💡 <strong>PBL Architecture Note:</strong><br>
+                            • Full Java Swing GUI + SQLite/MySQL JDBC implementation is in <code>java/</code>.<br>
+                            • Run <code>.\run_java.ps1</code> or <code>run_java.bat</code> to launch the Java Desktop application!
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="justify-content:space-between;">
+                <a href="login.html" class="btn btn-secondary" style="text-decoration:none;font-size:12px;">Open Full Login Page ↗</a>
+                <div style="display:flex;gap:8px;">
+                    <button type="button" class="btn btn-secondary" data-close="loginModal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="demoLoginSubmitBtn">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Currency Converter Modal -->
+    <div class="modal-overlay" id="currencyModal">
+        <div class="modal" style="max-width:460px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:20px;">💱</span>
+                    <h3 class="modal-title">Currency Converter</h3>
+                </div>
+                <button type="button" class="modal-close" data-close="currencyModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">
+                    Convert amounts between currencies using live-approximated rates. Rates are indicative.
+                </p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="currencyAmount">Amount</label>
+                        <input type="number" id="currencyAmount" class="form-control" placeholder="100" value="100" min="0" step="any">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="currencyFrom">From Currency</label>
+                        <select id="currencyFrom" class="form-control">
+                            <option value="USD">🇺🇸 USD — US Dollar</option>
+                            <option value="EUR">🇪🇺 EUR — Euro</option>
+                            <option value="GBP">🇬🇧 GBP — British Pound</option>
+                            <option value="INR">🇮🇳 INR — Indian Rupee</option>
+                            <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+                            <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+                            <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+                            <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+                            <option value="AED">🇦🇪 AED — UAE Dirham</option>
+                            <option value="THB">🇹🇭 THB — Thai Baht</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="currencyTo">To Currency</label>
+                    <select id="currencyTo" class="form-control">
+                        <option value="USD">🇺🇸 USD — US Dollar</option>
+                        <option value="EUR">🇪🇺 EUR — Euro</option>
+                        <option value="GBP">🇬🇧 GBP — British Pound</option>
+                        <option value="INR" selected>🇮🇳 INR — Indian Rupee</option>
+                        <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+                        <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+                        <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+                        <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+                        <option value="AED">🇦🇪 AED — UAE Dirham</option>
+                        <option value="THB">🇹🇭 THB — Thai Baht</option>
+                    </select>
+                </div>
+                <div class="currency-result-display" id="currencyResult">
+                    <div class="currency-result-amount" id="currencyResultAmount">—</div>
+                    <div class="currency-result-label" id="currencyResultLabel">Enter an amount above</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close="currencyModal">Close</button>
+                <button type="button" class="btn btn-primary" id="convertCurrencyBtn">Convert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Activity Feed / Daily Timeline Modal -->
+    <div class="modal-overlay" id="activityModal">
+        <div class="modal" style="max-width:560px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:20px;">📋</span>
+                    <h3 class="modal-title">Daily Spending Timeline</h3>
+                </div>
+                <button type="button" class="modal-close" data-close="activityModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;" id="activityTripLabel">
+                    Expense activity feed for the active trip.
+                </p>
+                <div id="activityFeedContainer"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-close="activityModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Per-Traveler Expense History Modal -->
+    <div class="modal-overlay" id="travelerHistoryModal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:20px;">📜</span>
+                    <h3 class="modal-title" id="travelerHistoryTitle">Traveler History</h3>
+                </div>
+                <button type="button" class="modal-close" data-close="travelerHistoryModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="travelerHistoryContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-close="travelerHistoryModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. "What Am I Looking At?" Modal (Star Party Cosmic Architecture) -->
+    <div class="modal-overlay" id="whatAmILookingAtModal">
+        <div class="modal starparty-modal" style="max-width:680px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;color:#FDE047;">✦</span>
+                    <div>
+                        <h3 class="modal-title" style="letter-spacing:0.08em;text-transform:uppercase;">What Am I Looking At?</h3>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.1em;">COSMIC TELEMETRY · OOP SYSTEM ARCHITECTURE</span>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" data-close="whatAmILookingAtModal">&times;</button>
+            </div>
+            <div class="modal-body" style="line-height:1.6;font-size:13px;">
+                <div class="starparty-accordion">
+                    <div class="accordion-item">
+                        <h4 class="accordion-header">✦ 01 // OBJECT-ORIENTED PROGRAMMING FOUNDATION</h4>
+                        <div class="accordion-content">
+                            <p><strong>TripBudget</strong> is an enterprise-grade Object-Oriented application applying the four pillars of OOP:</p>
+                            <ul style="margin:8px 0 12px 20px;">
+                                <li><strong>Encapsulation:</strong> Private fields (<code>#id</code>, <code>#name</code>, <code>#email</code>) guarded by validated getters/setters.</li>
+                                <li><strong>Inheritance:</strong> <code>Expense</code> is the abstract base class inherited by <code>FlightExpense</code>, <code>HotelExpense</code>, <code>FoodExpense</code>, <code>TransportExpense</code>, <code>ActivitiesExpense</code>, and <code>ShoppingExpense</code>.</li>
+                                <li><strong>Polymorphism:</strong> Dynamic runtime cost evaluation via <code>calculateTotalCost()</code> specialized per subclass (taxes, baggage, tips, nights, discounts).</li>
+                                <li><strong>Composition:</strong> A <code>Trip</code> has-a list of <code>Traveler</code> instances and has-a list of <code>Expense</code> instances.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h4 class="accordion-header">✦ 02 // GREEDY DEBT SIMPLIFICATION ALGORITHM</h4>
+                        <div class="accordion-content">
+                            <p>The <code>ExpenseSplitter</code> service calculates net balances for all group members and executes a greedy settlement algorithm:
+                            <strong>Minimizes overall transactions</strong> to settle all trip debts across travelers efficiently in <code>O(N log N)</code> time.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h4 class="accordion-header">✦ 03 // STAR PARTY COSMIC VISUAL INTERFACE</h4>
+                        <div class="accordion-content">
+                            <p>Inspired by the award-winning <em>Star Party</em> celestial aesthetic: real-time astronomical HUD telemetry, interactive HTML5 constellation map, high-contrast monospace technical telemetry, and print-ready PDF export.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h4 class="accordion-header">✦ 04 // EVALUATION RUNNERS</h4>
+                        <div class="accordion-content">
+                            <p>• Run unit tests: <code>node test_oop.js</code><br>
+                            • Run Java Swing & SQLite desktop app: <code>.\run_java.ps1</code> or <code>run_java.bat</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content:flex-end;">
+                <button type="button" class="btn btn-primary" data-close="whatAmILookingAtModal">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Start Trip from Recommendation Modal -->
+    <div class="modal-overlay" id="recommendationPlanModal">
+        <div class="modal" style="max-width:540px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:22px;">🚀</span>
+                    <div>
+                        <h3 class="modal-title" id="recPlanModalTitle">Plan Trip with Recommendation</h3>
+                        <span style="font-size:11px;color:var(--text-muted);" id="recPlanModalSubtitle">Seamlessly convert this recommendation into an active trip</span>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" data-close="recommendationPlanModal">&times;</button>
+            </div>
+            <form id="recPlanForm">
+                <div class="modal-body">
+                    <input type="hidden" id="recPlanDestId">
+
+                    <!-- Destination Mini Card Preview -->
+                    <div class="rec-plan-preview-card" id="recPlanPreviewCard">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="form-group" style="margin-top:14px;">
+                        <label class="form-label" for="recPlanTripName">Trip Name <span class="required">*</span></label>
+                        <input type="text" id="recPlanTripName" class="form-control" required placeholder="e.g. Bali Tropical Odyssey 2026">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="recPlanStartDate">Start Date</label>
+                            <input type="date" id="recPlanStartDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="recPlanEndDate">End Date</label>
+                            <input type="date" id="recPlanEndDate" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="recPlanBudget">Total Trip Budget <span class="required">*</span></label>
+                        <input type="number" id="recPlanBudget" class="form-control" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="recPlanTravelers">Travelers (Comma-separated)</label>
+                        <input type="text" id="recPlanTravelers" class="form-control" placeholder="e.g. Alex, Sarah, David">
+                        <p class="view-subtitle" style="font-size:11px;margin-top:5px;">Traveler objects will be encapsulated automatically.</p>
+                    </div>
+
+                    <div class="form-group rec-plan-prealloc-toggle" style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 14px;">
+                        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin:0;">
+                            <input type="checkbox" id="recPlanIncludeExpenses" checked style="margin-top:3px;accent-color:var(--success);">
+                            <div>
+                                <strong style="display:block;font-size:13px;color:var(--text-primary);">Auto-generate starting expense estimates</strong>
+                                <span style="font-size:11px;color:var(--text-muted);display:block;margin-top:2px;">
+                                    Uses OOP Factory pattern (<code>ExpenseFactory</code>) to populate estimated Flight, Hotel, Food, and Activities expenses into your trip budget.
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close="recommendationPlanModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="recPlanSubmitBtn">
+                        <span>Create Trip &amp; Launch</span> <span>🚀</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 11. Destination Details Modal -->
+    <div class="modal-overlay" id="recommendationDetailsModal">
+        <div class="modal" style="max-width:620px;">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;">🗺️</span>
+                    <div>
+                        <h3 class="modal-title" id="recDetailsModalTitle">Destination Deep Dive</h3>
+                        <span style="font-size:11px;color:var(--text-muted);" id="recDetailsModalSubtitle">Comprehensive cost breakdown &amp; travel intel</span>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" data-close="recommendationDetailsModal">&times;</button>
+            </div>
+            <div class="modal-body" id="recDetailsModalBody">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close="recommendationDetailsModal">Close</button>
+                <button type="button" class="btn btn-primary" id="recDetailsPlanBtn">Plan Trip Here 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Application Script (Self-contained Bundle with Zero CORS Restrictions) -->
+    <script src="js/bundle.js"></script>
+</body>
+</html>

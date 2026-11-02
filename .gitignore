@@ -1,0 +1,34 @@
+# Java Compiled Class Files
+*.class
+java/bin/
+bin/
+
+# Package Files & Archives
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Node & Build artifacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & Editor Settings
+.idea/
+*.iml
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
