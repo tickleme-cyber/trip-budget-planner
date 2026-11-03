@@ -1,12 +1,21 @@
 package com.tripbudget.models;
 
+import com.tripbudget.exceptions.BudgetExceededException;
+import com.tripbudget.exceptions.ValidationException;
+import com.tripbudget.interfaces.Reportable;
+import com.tripbudget.interfaces.Searchable;
+import com.tripbudget.interfaces.Validatable;
+import com.tripbudget.util.ReceiptFormatter;
+import com.tripbudget.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Trip Entity Class - Demonstrates Composition (Trip contains Travelers and Expenses)
+ * Trip Entity Class - Demonstrates Composition (Trip contains Travelers and Expenses),
+ * and implements core domain interfaces (Validatable, Reportable, Searchable).
  */
-public class Trip {
+public class Trip implements Validatable, Reportable, Searchable {
     private int tripId;
     private int userId;
     private String title;
@@ -24,7 +33,7 @@ public class Trip {
     public Trip(int tripId, int userId, String title, String destination, String startDate,
                 String endDate, double totalBudget, String currency, String status) {
         if (totalBudget <= 0) {
-            throw new IllegalArgumentException("Total budget must be greater than 0");
+            throw new IllegalArgumentException("Total budget must be greater than 0: $" + totalBudget);
         }
         this.tripId = tripId;
         this.userId = userId;
@@ -50,6 +59,18 @@ public class Trip {
     }
 
     /**
+     * Checks if adding an expense will exceed the trip's budget threshold.
+     * Throws BudgetExceededException if overrun occurs.
+     */
+    public void checkBudgetThreshold(Expense newExpense) throws BudgetExceededException {
+        if (newExpense == null) return;
+        double projected = getTotalSpent() + newExpense.calculateTotalAmount();
+        if (projected > this.totalBudget) {
+            throw new BudgetExceededException(this.totalBudget, projected);
+        }
+    }
+
+    /**
      * Calculates total spent across all expenses using Polymorphic dispatch
      * @return Sum of all calculated expense amounts
      */
@@ -70,7 +91,41 @@ public class Trip {
         return (getTotalSpent() / totalBudget) * 100.0;
     }
 
-    // Getters and Setters
+    /**
+     * Implements Validatable.validate()
+     * @throws ValidationException if title, budget, or destination fail domain constraints
+     */
+    @Override
+    public void validate() throws ValidationException {
+        if (StringUtils.isBlank(this.title)) {
+            throw new ValidationException("title", "Trip title cannot be blank or empty.");
+        }
+        if (this.totalBudget <= 0) {
+            throw new ValidationException("totalBudget", "Total budget must be positive: $" + this.totalBudget);
+        }
+        if (StringUtils.isBlank(this.destination)) {
+            throw new ValidationException("destination", "Trip destination must be specified.");
+        }
+    }
+
+    /**
+     * Implements Reportable.generateSummaryReport() using ReceiptFormatter & StringBuilder
+     */
+    @Override
+    public String generateSummaryReport() {
+        return ReceiptFormatter.formatTripSummary(this);
+    }
+
+    /**
+     * Implements Searchable.matchesQuery()
+     */
+    @Override
+    public boolean matchesQuery(String query) {
+        return StringUtils.containsIgnoreCase(this.title, query)
+                || StringUtils.containsIgnoreCase(this.destination, query);
+    }
+
+    // Encapsulated Getters and Setters
     public int getTripId() { return tripId; }
     public void setTripId(int tripId) { this.tripId = tripId; }
 

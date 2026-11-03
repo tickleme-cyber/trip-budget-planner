@@ -1,9 +1,15 @@
 package com.tripbudget.models;
 
+import com.tripbudget.exceptions.ValidationException;
+import com.tripbudget.interfaces.Searchable;
+import com.tripbudget.interfaces.Validatable;
+import com.tripbudget.util.StringUtils;
+
 /**
- * Traveler Entity Class - Encapsulates participant data
+ * Traveler Entity Class - Encapsulates participant data,
+ * and implements core domain interfaces (Validatable, Searchable).
  */
-public class Traveler {
+public class Traveler implements Validatable, Searchable {
     private int travelerId;
     private int tripId;
     private String name;
@@ -23,6 +29,37 @@ public class Traveler {
 
     public Traveler(int tripId, String name, String email, String colorCode) {
         this(0, tripId, name, email, colorCode);
+    }
+
+    /**
+     * Implements Validatable.validate()
+     * @throws ValidationException if traveler name is empty or email format is invalid
+     */
+    @Override
+    public void validate() throws ValidationException {
+        if (StringUtils.isBlank(this.name)) {
+            throw new ValidationException("name", "Traveler name cannot be empty or whitespace.");
+        }
+        if (StringUtils.isNotBlank(this.email) && !StringUtils.isValidEmail(this.email)) {
+            throw new ValidationException("email", "Invalid email format: " + this.email);
+        }
+    }
+
+    /**
+     * Implements Searchable.matchesQuery()
+     */
+    @Override
+    public boolean matchesQuery(String query) {
+        return StringUtils.containsIgnoreCase(this.name, query)
+                || StringUtils.containsIgnoreCase(this.email, query);
+    }
+
+    /**
+     * Generates a 2-letter uppercase initials string from traveler name
+     * @return Uppercase initials (e.g. "AM" for Alice Morgan)
+     */
+    public String getInitials() {
+        return StringUtils.extractInitials(this.name);
     }
 
     public int getTravelerId() { return travelerId; }

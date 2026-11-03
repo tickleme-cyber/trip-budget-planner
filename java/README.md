@@ -1,6 +1,6 @@
 # ☕ Java Desktop Application: Trip Budget Planner & Expense Manager
 
-A robust, enterprise-structured **Java Desktop Application** for group travel budget planning, expense management, and smart debt settlements.
+A robust, enterprise-structured **Java Desktop Application** for group travel budget planning, expense management, smart debt settlements, and budget travel recommendations.
 
 ---
 
@@ -8,37 +8,147 @@ A robust, enterprise-structured **Java Desktop Application** for group travel bu
 
 | Layer | Architecture Pattern | Implementation in this Application |
 |---|---|---|
-| **Presentation Layer** | MVC / Event-Driven Swing | Built with modern **Java Swing & AWT**. Features `LoginFrame`, `RegisterDialog`, `DashboardFrame`, `AddExpenseDialog`, `SplitCalculatorDialog`, `RecommendationDialog` (Budget Travel Advisor), real-time KPI budget cards, interactive `JTable`, and animated `JProgressBar`. |
+| **Presentation Layer** | MVC / Event-Driven Swing | Built with modern **Java Swing & AWT**. Features `LoginFrame`, `RegisterDialog`, `DashboardFrame`, `AddExpenseDialog`, `SplitCalculatorDialog`, `RecommendationDialog` (Budget Travel Advisor), real-time KPI budget cards, interactive `JTable`, animated `JProgressBar`, and receipt dialogs. |
 | **Relational Database** | 3NF Relational Model | Normalized database schema comprising 5 tables: `users`, `trips`, `travelers`, `expenses`, and `expense_splits`. Implements Primary Keys, Foreign Keys with `ON DELETE CASCADE`, `CHECK` constraints, and automatic seed data. |
 | **Persistence Layer** | JDBC & DAO Pattern | **Singleton Pattern** in `DBConnection.java`. Implements parameterized `PreparedStatement` to defend against SQL Injection, clean DAO Pattern (`UserDAO`, `TripDAO`, `ExpenseDAO`, `TravelerDAO`), and automatic fallback to an in-memory embedded relational store when external JDBC drivers are absent. |
 
 ---
 
-## 🧠 Object-Oriented Design & Design Patterns
+## 📦 Package Structure
 
-- **Encapsulation**: Private fields (`userId`, `passwordHash`, `baseFlightCost`, etc.) protected by strict public accessors, mutators, and domain validation across `User`, `Trip`, `Traveler`, `Expense`, and `Destination`.
-- **Inheritance**: Subclasses (`FlightExpense`, `HotelExpense`, `FoodExpense`, `ActivityExpense`, `TransportExpense`, `ShoppingExpense`) inherit common expense properties from abstract base class `Expense`.
-- **Polymorphism**: Dynamic method dispatch overriding `calculateTotalAmount()` across expense subclasses and travel strategy multipliers.
-- **Strategy Pattern**: `TravelStrategy` abstract class with concrete `BackpackerStrategy`, `ModerateStrategy`, and `LuxuryStrategy` adjusting accommodation, meal, and local transit costs dynamically.
-- **Factory Pattern**: `ExpenseFactory` and `TravelStrategyFactory` decoupling object creation from business logic.
-- **Composition**: `Trip` aggregates and manages collections of `Traveler` and `Expense` objects. `RecommendationEngine` manages collections of `Destination` models.
-- **DAO Pattern**: Clean separation of business logic, GUI layer, and JDBC data persistence layer.
+```
+com.tripbudget/
+├── Main.java                        # Application entry point
+├── TestOOP.java                     # Comprehensive automated unit test suite
+├── dao/                             # Data Access Object pattern implementation
+│   ├── ExpenseDAO.java
+│   ├── TravelerDAO.java
+│   ├── TripDAO.java
+│   └── UserDAO.java
+├── db/                              # Database connection singleton & schema runner
+│   └── DBConnection.java
+├── exceptions/                      # Domain exception hierarchy (checked/unchecked)
+│   ├── TripBudgetException.java     # Base domain exception (with timestamp & error code)
+│   ├── BudgetExceededException.java # Thrown when expense exceeds allocated trip budget
+│   ├── InvalidExpenseException.java # Thrown when financial amounts or fields are invalid
+│   ├── ValidationException.java     # Thrown when entity attributes fail domain validation
+│   ├── AuthenticationException.java # Thrown when user credentials or authorization fail
+│   └── TripNotFoundException.java   # Thrown when queried Trip ID does not exist
+├── gui/                             # Java Swing presentation layer & dialogs
+│   ├── AddExpenseDialog.java
+│   ├── AddTripDialog.java
+│   ├── DashboardFrame.java
+│   ├── LoginFrame.java
+│   ├── RecommendationDialog.java
+│   ├── RegisterDialog.java
+│   ├── SplitCalculatorDialog.java
+│   └── VivaGuideDialog.java
+├── interfaces/                      # Core domain contracts
+│   ├── Billable.java                # Financial total calculation & receipt contract
+│   ├── Splittable.java              # Group cost division & fair share contract
+│   ├── Validatable.java             # Structural validation contract
+│   ├── Reportable.java              # Printable text report generation contract
+│   └── Searchable.java              # Case-insensitive query matching contract
+├── models/                          # Domain entities & Strategy pattern
+│   ├── Expense.java                 # Base class (implements Billable, Splittable, Validatable, Searchable)
+│   ├── FlightExpense.java
+│   ├── HotelExpense.java
+│   ├── FoodExpense.java
+│   ├── TransportExpense.java
+│   ├── ActivityExpense.java
+│   ├── ShoppingExpense.java
+│   ├── Destination.java             # Implements Searchable
+│   ├── Traveler.java                # Implements Validatable, Searchable
+│   ├── Trip.java                    # Implements Validatable, Reportable, Searchable
+│   ├── User.java                    # Implements Validatable
+│   ├── TravelStrategy.java          # Abstract Strategy contract
+│   ├── BackpackerStrategy.java      # Concrete Strategy
+│   ├── ModerateStrategy.java        # Concrete Strategy
+│   └── LuxuryStrategy.java          # Concrete Strategy
+├── services/                        # Service layer & business logic
+│   ├── ExpenseSplitter.java         # Greedy debt simplification algorithm
+│   └── RecommendationEngine.java    # Multi-criteria budget travel advisor
+└── util/                            # String utilities & text report formatters
+    ├── StringUtils.java             # String methods, StringBuilder, StringBuffer, regex
+    └── ReceiptFormatter.java        # ASCII receipt and statement formatting
+```
 
 ---
 
-## 🗄️ Relational Database Schema (`schema.sql`)
+## 🔌 Custom Interfaces (`com.tripbudget.interfaces`)
 
-1. **`users`**: `(user_id, username, password_hash, full_name, email, role, created_at)`
-2. **`trips`**: `(trip_id, user_id, title, destination, start_date, end_date, total_budget, currency, status, created_at)`
-3. **`travelers`**: `(traveler_id, trip_id, name, email, color_code, created_at)`
-4. **`expenses`**: `(expense_id, trip_id, payer_id, payer_name, title, category, base_amount, tax_or_fees, total_amount, expense_date, notes)`
-5. **`expense_splits`**: `(split_id, expense_id, traveler_id, share_amount, is_settled)`
+1. **`Billable`**:
+   - `calculateTotalAmount()`: Returns total cost including category-specific taxes and fees.
+   - `getCategory()`: Returns category identifier.
+   - `getFormattedReceipt()`: Returns itemized printable text receipt.
+   - Implemented by `Expense` (and polymorphic subclasses).
+
+2. **`Splittable`**:
+   - `calculateFairShare(int numberOfParticipants)`: Computes per-traveler fair share.
+   - `isEligibleForSplit()`: Confirms item can be divided among friends.
+   - Implemented by `Expense`.
+
+3. **`Validatable`**:
+   - `validate() throws TripBudgetException`: Enforces non-blank fields, positive numerical amounts, and valid formats.
+   - Implemented by `Expense`, `Trip`, `Traveler`, `User`.
+
+4. **`Reportable`**:
+   - `generateSummaryReport()`: Emits a structured multi-line report.
+   - Implemented by `Trip`.
+
+5. **`Searchable`**:
+   - `matchesQuery(String query)`: Performs null-safe, case-insensitive keyword filtering.
+   - Implemented by `Expense`, `Destination`, `Trip`, `Traveler`.
+
+---
+
+## ⚠️ Exception Handling (`com.tripbudget.exceptions`)
+
+The application defines a structured custom exception hierarchy rooted at `TripBudgetException`:
+
+```
+                    ┌─────────────────────────┐
+                    │   java.lang.Exception   │
+                    └────────────▲────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │   TripBudgetException   │
+                    │   - errorCode: String   │
+                    │   - timestamp: DateTime │
+                    └────────────▲────────────┘
+                                 │
+       ┌─────────────────┬───────┴─────────┬──────────────────┐
+┌──────┴──────────────┐┌─┴───────────────┐┌┴────────────────┐┌┴───────────────────┐
+│BudgetExceededExcept.││InvalidExpenseEx.││ValidationExcept.││AuthenticationEx.   │
+├─────────────────────┤├─────────────────┤├─────────────────┤├────────────────────┤
+│+excessAmount: double││+attemptedAmount ││+fieldName:String││+username: String   │
+└─────────────────────┘└─────────────────┘└─────────────────┘└────────────────────┘
+```
+
+- **`try-catch-finally` Pattern**:
+  Used extensively in `AddExpenseDialog`, `AddTripDialog`, and `TestOOP` to catch specific domain exceptions (`ValidationException`, `InvalidExpenseException`, `BudgetExceededException`), display clear alerts, and execute cleanup in `finally` blocks.
+
+---
+
+## 🔤 Strings & String Processing (`com.tripbudget.util`)
+
+Demonstrates comprehensive Java string capabilities:
+- **`String` Methods**: `trim()`, `substring()`, `toUpperCase()`, `toLowerCase()`, `split()`, `join()`, `replace()`.
+- **`StringBuilder`**: Used in `ReceiptFormatter.java` and `StringUtils.java` for high-performance receipt assembly, financial statements, and tabular data without intermediate string garbage.
+- **`StringBuffer`**: Demonstrates thread-safe synchronized string accumulation for audit logging via `createThreadSafeLogEntry()`.
+- **`String.format()`**: Precision formatting with column alignments (`%-36s`, `%14s`), decimal padding (`$%,.2f`), and currency presentation.
+- **Regex Validation**: Standard RFC-compliant email validation pattern (`isValidEmail`) and positive currency matching (`isValidCurrency`).
+- **String Transformations**:
+  - `capitalizeWords("beachside villa resort")` $\rightarrow$ `"Beachside Villa Resort"`
+  - `extractInitials("Sarah Chen")` $\rightarrow$ `"SC"`
+  - `maskEmail("alex.rivera@example.com")` $\rightarrow$ `"a***a@example.com"`
+  - `padRight()` / `padLeft()` for columnar alignment.
 
 ---
 
 ## 🚀 How to Run the Java Application
 
-### ⚡ 1-Click Launch (Recommended):
+### ⚡ 1-Click Launch:
 In PowerShell:
 ```powershell
 .\run_java.ps1
@@ -58,20 +168,7 @@ Or in Command Prompt:
 ---
 
 ### 🧪 Running Java Automated Unit Tests
-To run the automated Object-Oriented test suite verifying polymorphic dispatch, encapsulation, and debt settlement:
+To run the automated Object-Oriented test suite verifying all 8 units (Encapsulation, Inheritance, Polymorphism, Composition, Strategy Pattern, Interfaces, Exception Handling, Strings):
 ```cmd
 .\test_oop_java.bat
 ```
-
----
-
-## ❓ Architecture & Design FAQ
-
-1. **Q: How does JDBC prevent SQL Injection in your project?**  
-   *A:* By using `PreparedStatement` with parameterized placeholders (`?`) instead of string concatenation. The database engine precompiles the query and treats user input strictly as data literals.
-
-2. **Q: How is Polymorphism used in the Expense calculation?**  
-   *A:* `Expense` declares `calculateTotalAmount()`. Derived classes like `FlightExpense` (adds baggage/seat fees) and `HotelExpense` (calculates nightly tax) override this method. When `Trip.getTotalSpent()` iterates over expenses, Java dynamically dispatches the correct subclass calculation at runtime without `instanceof` checks.
-
-3. **Q: How did you implement Database Normalization?**  
-   *A:* The schema is in Third Normal Form (3NF). Entities (Users, Trips, Expenses, Travelers) are decoupled into separate tables linked through foreign keys, eliminating redundancy and update anomalies.

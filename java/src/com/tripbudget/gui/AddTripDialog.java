@@ -1,8 +1,10 @@
 package com.tripbudget.gui;
 
 import com.tripbudget.dao.TripDAO;
+import com.tripbudget.exceptions.ValidationException;
 import com.tripbudget.models.Trip;
 import com.tripbudget.models.User;
+import com.tripbudget.util.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,14 +13,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Add Trip Dialog GUI
+ * Add Trip Dialog GUI - Demonstrates:
+ *  - Custom Exception Handling (ValidationException)
+ *  - StringUtils validation and string formatting
+ *  - Model validation via Validatable interface
  */
 public class AddTripDialog extends JDialog {
     private boolean tripAdded = false;
 
     public AddTripDialog(Frame parent, User user, TripDAO tripDAO) {
         super(parent, "Create New Trip", true);
-        setSize(440, 460);
+        setSize(460, 480);
         setLocationRelativeTo(parent);
         setResizable(false);
 
@@ -49,29 +54,45 @@ public class AddTripDialog extends JDialog {
         btnSave.setForeground(Color.WHITE);
         btnSave.addActionListener(e -> {
             try {
-                String title = txtTitle.getText().trim();
-                String dest = txtDest.getText().trim();
-                double budget = Double.parseDouble(txtBudget.getText().trim());
-                String start = txtStartDate.getText().trim();
-                String end = txtEndDate.getText().trim();
+                String title = StringUtils.safeTrim(txtTitle.getText());
+                String dest = StringUtils.safeTrim(txtDest.getText());
+                String budgetStr = StringUtils.safeTrim(txtBudget.getText());
+                String start = StringUtils.safeTrim(txtStartDate.getText());
+                String end = StringUtils.safeTrim(txtEndDate.getText());
 
-                if (title.isEmpty() || dest.isEmpty()) {
-                    throw new IllegalArgumentException("Title and Destination cannot be empty.");
+                if (StringUtils.isBlank(title)) {
+                    throw new ValidationException("title", "Trip title cannot be blank or empty.");
+                }
+                if (StringUtils.isBlank(dest)) {
+                    throw new ValidationException("destination", "Destination cannot be blank.");
+                }
+
+                double budget = Double.parseDouble(budgetStr);
+                if (budget <= 0) {
+                    throw new ValidationException("budget", "Budget must be greater than zero.");
                 }
 
                 Trip newTrip = new Trip(0, user.getUserId(), title, dest, start, end, budget, "USD", "ACTIVE");
+                // Validate entity via Validatable interface
+                newTrip.validate();
+
                 boolean ok = tripDAO.createTrip(newTrip);
                 if (ok) {
                     tripAdded = true;
-                    JOptionPane.showMessageDialog(this, "Trip created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                            String.format("Trip '%s' created successfully with budget of %s!",
+                                    newTrip.getTitle(), StringUtils.formatCurrency(budget)),
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Failed to create trip.", "Database Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Failed to create trip in database.", "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (ValidationException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validation Warning", JOptionPane.WARNING_MESSAGE);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid budget number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please enter a valid numeric budget amount.", "Format Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Unexpected error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 

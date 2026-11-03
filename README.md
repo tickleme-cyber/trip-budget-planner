@@ -49,6 +49,9 @@ Both implementations share the same underlying Object-Oriented domain models, bu
 | **Encapsulation** | Strict private fields (`#id`, `#title`, `#baseAmount`, `#budget`) guard internal state against uncontrolled mutation. Controlled via validated getters and setters. | [`Traveler.js`](./js/models/Traveler.js), [`Expense.js`](./js/models/Expense.js), [`Trip.js`](./js/models/Trip.js), [`Destination.js`](./js/models/Destination.js) |
 | **Inheritance** | Abstract `Expense` base class defines core contract; specialized domain subclasses extend it with category-specific data. | [`ExpenseSubclasses.js`](./js/models/ExpenseSubclasses.js), [`Expense.java`](./java/src/com/tripbudget/models/Expense.java) |
 | **Polymorphism** | Subclasses override `calculateTotalCost()` dynamically. Aggregation functions invoke this method at runtime without `if/else` or `instanceof` checks. | [`ExpenseSubclasses.js`](./js/models/ExpenseSubclasses.js), [`FlightExpense.java`](./java/src/com/tripbudget/models/FlightExpense.java) |
+| **Interfaces** | Clear contracts (`Billable`, `Splittable`, `Validatable`, `Reportable`, `Searchable`) decoupled from concrete implementations. | [`Billable.java`](./java/src/com/tripbudget/interfaces/Billable.java), [`Validatable.java`](./java/src/com/tripbudget/interfaces/Validatable.java) |
+| **Exception Handling** | Robust domain exception hierarchy (`TripBudgetException`, `BudgetExceededException`, `ValidationException`, `InvalidExpenseException`). | [`TripBudgetException.java`](./java/src/com/tripbudget/exceptions/TripBudgetException.java), [`BudgetExceededException.java`](./java/src/com/tripbudget/exceptions/BudgetExceededException.java) |
+| **String Processing** | Advanced string manipulation with `StringBuilder`, thread-safe `StringBuffer`, `String.format`, regex patterns, and ASCII receipt formatting. | [`StringUtils.java`](./java/src/com/tripbudget/util/StringUtils.java), [`ReceiptFormatter.java`](./java/src/com/tripbudget/util/ReceiptFormatter.java) |
 | **Strategy Pattern** | `TravelStrategy` abstract contract allows pluggable runtime calculation of lodging, transit, and food cost multipliers. | [`TravelStrategy.js`](./js/models/TravelStrategy.js), [`BackpackerStrategy.java`](./java/src/com/tripbudget/models/BackpackerStrategy.java) |
 | **Factory Pattern** | `ExpenseFactory` and `TravelStrategyFactory` encapsulate object instantiation based on category tokens and user preferences. | [`ExpenseSubclasses.js`](./js/models/ExpenseSubclasses.js), [`ExpenseFactory.java`](./java/src/com/tripbudget/models/ExpenseFactory.java) |
 | **Composition** | A `Trip` *has-a* collection of `Traveler` instances and *has-a* collection of `Expense` items. | [`Trip.js`](./js/models/Trip.js), [`Trip.java`](./java/src/com/tripbudget/models/Trip.java) |
@@ -208,11 +211,15 @@ node test_oop.js
     ├── README.md                # Java application documentation
     └── src/com/tripbudget/
         ├── Main.java            # Java entry point
+        ├── TestOOP.java         # Automated Java test suite
         ├── dao/                 # JDBC Data Access Objects
         ├── db/                  # Connection singleton & schema initializer
-        ├── gui/                 # Swing presentation layer
+        ├── exceptions/          # Custom domain exception hierarchy
+        ├── gui/                 # Swing presentation layer & dialogs
+        ├── interfaces/          # Domain contracts (Billable, Validatable, etc.)
         ├── models/              # OOP domain entities & Strategy patterns
-        └── services/            # Recommendation engine & split algorithms
+        ├── services/            # Recommendation engine & split algorithms
+        └── util/                # String manipulation, regex & receipt formatters
 ```
 
 ---

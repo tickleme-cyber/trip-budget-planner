@@ -1,6 +1,7 @@
 package com.tripbudget.dao;
 
 import com.tripbudget.db.DBConnection;
+import com.tripbudget.exceptions.AuthenticationException;
 import com.tripbudget.models.User;
 
 import java.sql.Connection;
@@ -60,6 +61,21 @@ public class UserDAO {
             return cached;
         }
         return null;
+    }
+
+    /**
+     * Authenticates a user and throws an explicit AuthenticationException if credentials fail
+     * @param username Provided username
+     * @param password Provided password
+     * @return Validated User instance
+     * @throws AuthenticationException When authentication fails
+     */
+    public User authenticateOrThrow(String username, String password) throws AuthenticationException {
+        User u = authenticate(username, password);
+        if (u == null) {
+            throw new AuthenticationException(username, "Invalid credentials provided for user '" + username + "'");
+        }
+        return u;
     }
 
     /**

@@ -1,5 +1,8 @@
 package com.tripbudget.models;
 
+import com.tripbudget.interfaces.Searchable;
+import com.tripbudget.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,10 +11,10 @@ import java.util.List;
  * ============================================================================
  * Destination Model — Demonstrates Encapsulation & Domain Modeling
  * Represents a travel destination with cost benchmarks, duration guidelines,
- * and polymorphic cost estimation via the Strategy Pattern.
+ * polymorphic cost estimation via the Strategy Pattern, and Searchable interface.
  * ============================================================================
  */
-public class Destination {
+public class Destination implements Searchable {
     private String id;
     private String name;
     private String country;
@@ -187,6 +190,18 @@ public class Destination {
         if (targetRegion == null || targetRegion.equalsIgnoreCase("all") || targetRegion.isEmpty()) return true;
         String target = targetRegion.toLowerCase();
         return region.toLowerCase().contains(target) || country.toLowerCase().contains(target);
+    }
+
+    /**
+     * Implements Searchable.matchesQuery()
+     */
+    @Override
+    public boolean matchesQuery(String query) {
+        if (StringUtils.isBlank(query)) return true;
+        return StringUtils.containsIgnoreCase(this.name, query)
+                || StringUtils.containsIgnoreCase(this.country, query)
+                || StringUtils.containsIgnoreCase(this.region, query)
+                || StringUtils.containsIgnoreCase(this.tagline, query);
     }
 
     @Override

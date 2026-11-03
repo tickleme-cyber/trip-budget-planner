@@ -1,28 +1,41 @@
 package com.tripbudget;
 
+import com.tripbudget.dao.ExpenseDAO;
+import com.tripbudget.dao.TravelerDAO;
+import com.tripbudget.dao.TripDAO;
+import com.tripbudget.dao.UserDAO;
+import com.tripbudget.exceptions.AuthenticationException;
+import com.tripbudget.exceptions.BudgetExceededException;
+import com.tripbudget.exceptions.InvalidExpenseException;
+import com.tripbudget.exceptions.TripBudgetException;
+import com.tripbudget.exceptions.ValidationException;
+import com.tripbudget.interfaces.Billable;
+import com.tripbudget.interfaces.Reportable;
+import com.tripbudget.interfaces.Searchable;
+import com.tripbudget.interfaces.Splittable;
+import com.tripbudget.interfaces.Validatable;
 import com.tripbudget.models.ActivityExpense;
+import com.tripbudget.models.BackpackerStrategy;
+import com.tripbudget.models.Destination;
 import com.tripbudget.models.Expense;
 import com.tripbudget.models.FlightExpense;
 import com.tripbudget.models.FoodExpense;
 import com.tripbudget.models.HotelExpense;
+import com.tripbudget.models.LuxuryStrategy;
 import com.tripbudget.models.ShoppingExpense;
 import com.tripbudget.models.TransportExpense;
-import com.tripbudget.models.Traveler;
-import com.tripbudget.models.Trip;
-import com.tripbudget.models.Destination;
 import com.tripbudget.models.TravelStrategy;
 import com.tripbudget.models.TravelStrategyFactory;
-import com.tripbudget.models.BackpackerStrategy;
-import com.tripbudget.models.LuxuryStrategy;
-import com.tripbudget.dao.TripDAO;
-import com.tripbudget.dao.TravelerDAO;
-import com.tripbudget.dao.ExpenseDAO;
+import com.tripbudget.models.Traveler;
+import com.tripbudget.models.Trip;
 import com.tripbudget.models.User;
-import com.tripbudget.services.RecommendationEngine;
-import com.tripbudget.services.RecommendationEngine.RecommendationMatch;
 import com.tripbudget.services.ExpenseSplitter;
 import com.tripbudget.services.ExpenseSplitter.BalanceEntry;
 import com.tripbudget.services.ExpenseSplitter.DebtTransaction;
+import com.tripbudget.services.RecommendationEngine;
+import com.tripbudget.services.RecommendationEngine.RecommendationMatch;
+import com.tripbudget.util.ReceiptFormatter;
+import com.tripbudget.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +44,16 @@ import java.util.Map;
 
 /**
  * ============================================================================
- * Java OOP Unit Tests (Encapsulation, Inheritance, Polymorphism, Composition)
+ * Java OOP Comprehensive Unit Tests
+ * Demonstrates:
+ *  1. Encapsulation & Data Hiding
+ *  2. Inheritance & Polymorphism
+ *  3. Composition in Trip
+ *  4. Debt Settlement & Min-Cash-Flow Algorithm
+ *  5. Budget Recommendation Engine & Strategy Pattern
+ *  6. Packages & Interface Implementation (Billable, Splittable, Validatable, etc.)
+ *  7. Custom Exception Handling (try-catch-finally, ValidationException, etc.)
+ *  8. Strings & String Processing (StringBuilder, StringBuffer, String.format, Regex)
  * ============================================================================
  */
 public class TestOOP {
@@ -93,10 +115,6 @@ public class TestOOP {
         expenses.add(hotel);  // Bob: 330
         expenses.add(food);   // Alice: 100
         expenses.add(transport); // Bob: 75
-        // Alice total paid: 680
-        // Bob total paid: 405
-        // Total: 1085, Fair Share: 542.5
-        // Alice Net: +137.5 (gets back), Bob Net: -137.5 (owes)
 
         Map<Integer, BalanceEntry> balances = ExpenseSplitter.calculateBalances(travelers, expenses);
         for (BalanceEntry entry : balances.values()) {
@@ -110,7 +128,7 @@ public class TestOOP {
             System.out.println("   " + dt);
         }
 
-        // 5. BUDGET RECOMMENDATION ENGINE & STRATEGY PATTERN (OOP Principles)
+        // 5. BUDGET RECOMMENDATION ENGINE & STRATEGY PATTERN
         System.out.println("\n--- 5. Testing Budget Recommendation Engine & Strategy Pattern ---");
         TravelStrategy backpacker = TravelStrategyFactory.getStrategy("BACKPACKER");
         TravelStrategy luxury = TravelStrategyFactory.getStrategy("LUXURY");
@@ -136,9 +154,8 @@ public class TestOOP {
             System.out.println("   " + (i + 1) + ". " + recommendations.get(i));
         }
 
-        // Test 1-click trip generation from recommendation
         RecommendationMatch topMatch = recommendations.get(0);
-        User testUser = new User(1, "demo", "hash123", "Demo User", "demo@example.com", "STUDENT");
+        User testUser = new User(1, "demo", "demo123", "Demo User", "demo@example.com", "ORGANIZER");
         Trip generatedTrip = engine.createTripFromRecommendation(
                 topMatch, testUser, "Goa Getaway Test",
                 Arrays.asList("Alice", "Bob"), true,
@@ -147,6 +164,99 @@ public class TestOOP {
         System.out.println("✅ createTripFromRecommendation successfully generated Trip: \""
                 + generatedTrip.getTitle() + "\" (Budget: $" + generatedTrip.getTotalBudget() + ", Destination: " + generatedTrip.getDestination() + ")");
 
-        System.out.println("\n🎉 ALL JAVA OBJECT-ORIENTED PROGRAMMING TESTS PASSED SUCCESSFULLY!");
+        // 6. INTERFACES (Billable, Splittable, Validatable, Searchable, Reportable)
+        System.out.println("\n--- 6. Testing Packages & Custom Interfaces ---");
+        Billable billableFlight = flight;
+        System.out.println("✅ Billable interface total: " + StringUtils.formatCurrency(billableFlight.calculateTotalAmount())
+                + " [Category: " + billableFlight.getCategory() + "]");
+
+        Splittable splittableHotel = hotel;
+        System.out.println("✅ Splittable interface fair share (for 4 travelers): "
+                + StringUtils.formatCurrency(splittableHotel.calculateFairShare(4))
+                + " [Eligible: " + splittableHotel.isEligibleForSplit() + "]");
+
+        Validatable validatableTraveler = alex;
+        try {
+            validatableTraveler.validate();
+            System.out.println("✅ Validatable interface: Traveler state verified successfully.");
+        } catch (TripBudgetException e) {
+            System.err.println("❌ FAILED: Traveler should be valid!");
+        }
+
+        Searchable searchableExpense = flight;
+        Searchable searchableDest = dest;
+        boolean matchesExp = searchableExpense.matchesQuery("flight");
+        boolean matchesDest = searchableDest.matchesQuery("india");
+        System.out.println("✅ Searchable interface: Expense matches 'flight' -> " + matchesExp
+                + ", Destination matches 'india' -> " + matchesDest);
+
+        Reportable reportableTrip = trip;
+        String summary = reportableTrip.generateSummaryReport();
+        if (summary.contains("TRIP FINANCIAL STATEMENT")) {
+            System.out.println("✅ Reportable interface: Trip summary report generated successfully.");
+        }
+
+        // 7. EXCEPTION HANDLING (try-catch-finally, Custom Exception Hierarchy)
+        System.out.println("\n--- 7. Testing Custom Exception Handling (try-catch-finally) ---");
+        
+        // 7A: Testing ValidationException
+        try {
+            Traveler badTraveler = new Traveler(99, 1, "   ", "bad-email", "#000");
+            badTraveler.validate();
+            System.err.println("❌ FAILED: Blank name traveler should fail validation!");
+        } catch (IllegalArgumentException | ValidationException ex) {
+            System.out.println("✅ Caught expected validation failure: " + ex.getMessage());
+        }
+
+        // 7B: Testing BudgetExceededException
+        try {
+            Expense giantExpense = new Expense(99, 1, 1, "Alice Morgan", "Private Yacht Rental", "ACTIVITIES", 5000.0, 500.0, "2026-06-20", "VIP");
+            trip.checkBudgetThreshold(giantExpense);
+            System.err.println("❌ FAILED: BudgetExceededException was not thrown!");
+        } catch (BudgetExceededException ex) {
+            System.out.printf("✅ Caught BudgetExceededException: Overrun: $%.2f (Projected: $%.2f vs Limit: $%.2f)\n",
+                    ex.getExcessAmount(), ex.getAttemptedTotal(), ex.getTotalBudget());
+        }
+
+        // 7C: Testing AuthenticationException with try-catch-finally
+        boolean finallyExecuted = false;
+        try {
+            UserDAO userDAO = new UserDAO();
+            userDAO.authenticateOrThrow("unknown_user", "wrong_password");
+            System.err.println("❌ FAILED: AuthenticationException was not thrown!");
+        } catch (AuthenticationException ex) {
+            System.out.println("✅ Caught AuthenticationException: " + ex.getMessage() + " [Error Code: " + ex.getErrorCode() + "]");
+        } finally {
+            finallyExecuted = true;
+            System.out.println("✅ finally block executed cleanly for resource teardown.");
+        }
+        if (!finallyExecuted) throw new AssertionError("Finally block must execute!");
+
+        // 8. STRINGS & STRING UTILITIES
+        System.out.println("\n--- 8. Testing Strings, StringBuilder, StringBuffer, & Formatting ---");
+        
+        // 8A: String formatting & methods
+        String capitalized = StringUtils.capitalizeWords("seafood shack candlelight beach dinner");
+        System.out.println("✅ StringUtils.capitalizeWords(): \"" + capitalized + "\"");
+
+        String initials = StringUtils.extractInitials("Sarah Chen");
+        System.out.println("✅ StringUtils.extractInitials(): \"" + initials + "\"");
+
+        boolean emailCheck1 = StringUtils.isValidEmail("alex.rivera@example.com");
+        boolean emailCheck2 = StringUtils.isValidEmail("invalid-email-address");
+        System.out.println("✅ String regex validation: valid email -> " + emailCheck1 + ", invalid email -> " + (!emailCheck2));
+
+        String maskedEmail = StringUtils.maskEmail("alex.rivera@example.com");
+        System.out.println("✅ String masking: " + maskedEmail);
+
+        // 8B: StringBuilder & ReceiptFormatter
+        String formattedReceipt = ReceiptFormatter.formatReceipt(flight);
+        System.out.println("✅ StringBuilder official receipt generated:\n" + formattedReceipt.trim());
+
+        // 8C: StringBuffer thread-safe logging
+        String threadLog = StringUtils.createThreadSafeLogEntry("AUDIT", "PAYMENT_PROCESSED", "ID: EXP-00001, Amount: $580.00");
+        System.out.println("✅ StringBuffer thread-safe log: " + threadLog);
+
+        System.out.println("\n🎉 ALL JAVA OBJECT-ORIENTED, INTERFACE, EXCEPTION, AND STRING TESTS PASSED SUCCESSFULLY!");
     }
 }

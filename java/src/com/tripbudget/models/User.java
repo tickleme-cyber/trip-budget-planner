@@ -1,9 +1,13 @@
 package com.tripbudget.models;
 
+import com.tripbudget.exceptions.ValidationException;
+import com.tripbudget.interfaces.Validatable;
+import com.tripbudget.util.StringUtils;
+
 /**
- * User Entity Class - Demonstrates Encapsulation
+ * User Entity Class - Demonstrates Encapsulation and implements Validatable
  */
-public class User {
+public class User implements Validatable {
     private int userId;
     private String username;
     private String passwordHash;
@@ -13,15 +17,29 @@ public class User {
 
     public User(int userId, String username, String passwordHash, String fullName, String email, String role) {
         this.userId = userId;
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.fullName = fullName;
-        this.email = email;
-        this.role = role != null ? role : "USER";
+        this.username = username != null ? username.trim() : "";
+        this.passwordHash = passwordHash != null ? passwordHash : "";
+        this.fullName = fullName != null ? fullName.trim() : "";
+        this.email = email != null ? email.trim() : "";
+        this.role = role != null ? role.trim() : "USER";
     }
 
     public User(String username, String passwordHash, String fullName, String email) {
         this(0, username, passwordHash, fullName, email, "USER");
+    }
+
+    /**
+     * Implements Validatable.validate()
+     * @throws ValidationException if username is blank or email is malformed
+     */
+    @Override
+    public void validate() throws ValidationException {
+        if (StringUtils.isBlank(this.username)) {
+            throw new ValidationException("username", "Username cannot be blank or empty.");
+        }
+        if (StringUtils.isNotBlank(this.email) && !StringUtils.isValidEmail(this.email)) {
+            throw new ValidationException("email", "Invalid email format: " + this.email);
+        }
     }
 
     // Encapsulated Getters and Setters

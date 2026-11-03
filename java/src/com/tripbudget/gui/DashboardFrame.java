@@ -7,6 +7,7 @@ import com.tripbudget.models.Expense;
 import com.tripbudget.models.Traveler;
 import com.tripbudget.models.Trip;
 import com.tripbudget.models.User;
+import com.tripbudget.util.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,7 +17,8 @@ import java.util.List;
 
 /**
  * ============================================================================
- * Main Dashboard GUI (Fulfills GUI Design - 5 Marks)
+ * Main Dashboard GUI - Presents real-time financial tracking, receipt generation,
+ * and seamless interaction across Trip, Traveler, and Expense domain models.
  * ============================================================================
  */
 public class DashboardFrame extends JFrame {
@@ -225,12 +227,45 @@ public class DashboardFrame extends JFrame {
             new SplitCalculatorDialog(this, currentTravelers, currentExpenses).setVisible(true);
         });
 
+        JButton btnViewReceipt = new JButton("🧾 View Receipt");
+        btnViewReceipt.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnViewReceipt.setBackground(new Color(30, 41, 59));
+        btnViewReceipt.setForeground(new Color(165, 180, 252));
+        btnViewReceipt.setFocusPainted(false);
+        btnViewReceipt.addActionListener(e -> {
+            int selectedRow = expenseTable.getSelectedRow();
+            if (selectedRow >= 0 && selectedRow < currentExpenses.size()) {
+                Expense selected = currentExpenses.get(selectedRow);
+                showFormattedTextDialog("Itemized Receipt - " + selected.getTitle(), selected.getFormattedReceipt());
+            } else if (!currentExpenses.isEmpty()) {
+                Expense latest = currentExpenses.get(currentExpenses.size() - 1);
+                showFormattedTextDialog("Latest Receipt - " + latest.getTitle(), latest.getFormattedReceipt());
+            } else {
+                JOptionPane.showMessageDialog(this, "No expenses logged to generate a receipt for.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        JButton btnStatement = new JButton("📄 Statement");
+        btnStatement.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnStatement.setBackground(new Color(51, 65, 85));
+        btnStatement.setForeground(Color.WHITE);
+        btnStatement.setFocusPainted(false);
+        btnStatement.addActionListener(e -> {
+            if (currentTrip == null) {
+                JOptionPane.showMessageDialog(this, "Please select a trip first.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            showFormattedTextDialog("Trip Financial Statement - " + currentTrip.getTitle(), currentTrip.generateSummaryReport());
+        });
+
         JButton btnRefresh = new JButton("🔄 Refresh");
         btnRefresh.setBackground(new Color(51, 65, 85));
         btnRefresh.setForeground(Color.WHITE);
         btnRefresh.addActionListener(e -> refreshTripData());
 
         bottomBar.add(btnRefresh);
+        bottomBar.add(btnViewReceipt);
+        bottomBar.add(btnStatement);
         bottomBar.add(btnSplit);
         bottomBar.add(btnAddExpense);
 
@@ -353,5 +388,18 @@ public class DashboardFrame extends JFrame {
                 }
             }
         }
+    }
+
+    private void showFormattedTextDialog(String title, String formattedText) {
+        JTextArea area = new JTextArea(formattedText);
+        area.setEditable(false);
+        area.setFont(new Font("Consolas", Font.PLAIN, 12));
+        area.setBackground(new Color(15, 23, 42));
+        area.setForeground(new Color(226, 232, 240));
+        area.setMargin(new Insets(12, 12, 12, 12));
+
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setPreferredSize(new Dimension(560, 460));
+        JOptionPane.showMessageDialog(this, scroll, title, JOptionPane.PLAIN_MESSAGE);
     }
 }
