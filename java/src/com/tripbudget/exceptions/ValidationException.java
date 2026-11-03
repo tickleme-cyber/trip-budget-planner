@@ -15,3 +15,4 @@ public class ValidationException extends TripBudgetException {
         return fieldName;
     }
 }
+

@@ -2,10 +2,13 @@
 
 > A modern, full-stack travel budgeting, smart expense splitting, and destination recommendation application engineered with Object-Oriented architecture, design patterns, and an astronomical luxury aesthetic.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=flat&logo=github)](https://tickleme-cyber.github.io/trip-budget-planner/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)](#)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](#)
 [![Architecture](https://img.shields.io/badge/Architecture-OOP%20%26%20Design%20Patterns-6366F1)](#)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](#)
+
+🌐 **Live Website:** **[https://tickleme-cyber.github.io/trip-budget-planner/](https://tickleme-cyber.github.io/trip-budget-planner/)**
 
 ---
 

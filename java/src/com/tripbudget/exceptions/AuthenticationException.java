@@ -15,3 +15,4 @@ public class AuthenticationException extends TripBudgetException {
         return username;
     }
 }
+

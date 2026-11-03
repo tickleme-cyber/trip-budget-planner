@@ -15,3 +15,4 @@ public class TripNotFoundException extends TripBudgetException {
         return tripId;
     }
 }
+

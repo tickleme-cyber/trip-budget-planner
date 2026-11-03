@@ -15,3 +15,4 @@ public class InvalidExpenseException extends TripBudgetException {
         return attemptedAmount;
     }
 }
+

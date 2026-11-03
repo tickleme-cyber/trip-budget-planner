@@ -30,3 +30,4 @@ public class BudgetExceededException extends TripBudgetException {
         return excessAmount;
     }
 }
+

@@ -37,3 +37,4 @@ public class TripBudgetException extends Exception {
         return String.format("[%s @ %s] %s", errorCode, formattedTime, getMessage());
     }
 }
+
