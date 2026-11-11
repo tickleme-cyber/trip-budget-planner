@@ -2,6 +2,8 @@ package com.tripbudget.gui;
 
 import com.tripbudget.models.Expense;
 import com.tripbudget.models.Traveler;
+import com.tripbudget.services.ExpenseSplitter;
+import com.tripbudget.services.ExpenseSplitter.DebtTransaction;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -80,16 +82,27 @@ public class SplitCalculatorDialog extends JDialog {
         txtSettlement.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         txtSettlement.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        StringBuilder sb = new StringBuilder("💡 Settlement Algorithm Steps:\n");
-        sb.append(String.format("• Total Trip Expense: $%.2f | Equal Share Per Person: $%.2f\n", totalExpense, fairShare));
-        sb.append("• Greedily simplifying pairwise balances to minimize total transactions.\n");
+        StringBuilder sb = new StringBuilder("💡 Who Owes Whom (Greedy Min-Cash-Flow Settlement):\n");
+        sb.append(String.format("• Total Trip Expense: $%.2f | Equal Share Per Person: $%.2f\n\n", totalExpense, fairShare));
+
+        List<DebtTransaction> settlements = ExpenseSplitter.settleDebts(travelers, expenses);
+        if (settlements.isEmpty()) {
+            sb.append("✅ All balances are completely settled! No transfers needed.\n");
+        } else {
+            sb.append(String.format("Minimal Settlements Required (%d transaction%s):\n",
+                    settlements.size(), settlements.size() == 1 ? "" : "s"));
+            for (DebtTransaction dt : settlements) {
+                sb.append("   ").append(dt.toString()).append("\n");
+            }
+        }
 
         txtSettlement.setText(sb.toString());
+        txtSettlement.setCaretPosition(0);
 
         JPanel centerPanel = new JPanel(new GridLayout(2, 1, 0, 10));
         centerPanel.setOpaque(false);
         centerPanel.add(scrollPane);
-        centerPanel.add(txtSettlement);
+        centerPanel.add(new JScrollPane(txtSettlement));
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 

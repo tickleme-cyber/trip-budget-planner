@@ -27,4 +27,17 @@ public class ExpenseFactory {
                 return new Expense(expenseId, tripId, payerId, payerName, title, category, baseAmount, extra1, date, notes);
         }
     }
+
+    /**
+     * Convenience factory method for dialogs and DAOs storing a flat tax/fee amount.
+     */
+    public static Expense createExpenseWithFlatTax(String category, int expenseId, int tripId, int payerId,
+                                                   String payerName, String title, double baseAmount, double flatTax,
+                                                   String date, String notes) {
+        if ("HOTEL".equalsIgnoreCase(category)) {
+            double taxRate = baseAmount > 0 ? (flatTax / baseAmount) : 0.0;
+            return createExpense("HOTEL", expenseId, tripId, payerId, payerName, title, baseAmount, 1, taxRate, 0, date, notes);
+        }
+        return createExpense(category, expenseId, tripId, payerId, payerName, title, baseAmount, flatTax, 0, 0, date, notes);
+    }
 }

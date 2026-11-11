@@ -2,6 +2,7 @@ package com.tripbudget.dao;
 
 import com.tripbudget.db.DBConnection;
 import com.tripbudget.models.Expense;
+import com.tripbudget.models.ExpenseFactory;
 import com.tripbudget.models.FlightExpense;
 import com.tripbudget.models.FoodExpense;
 import com.tripbudget.models.HotelExpense;
@@ -48,17 +49,8 @@ public class ExpenseDAO {
                     String date = rs.getString("expense_date");
                     String notes = rs.getString("notes");
 
-                    // Polymorphic instantiation based on Category
-                    Expense exp;
-                    if ("FLIGHT".equalsIgnoreCase(category)) {
-                        exp = new FlightExpense(id, tId, pId, pName, title, base, tax, 0, 0, date, notes);
-                    } else if ("HOTEL".equalsIgnoreCase(category)) {
-                        exp = new HotelExpense(id, tId, pId, pName, title, base, 1, 0, date, notes);
-                    } else if ("FOOD".equalsIgnoreCase(category)) {
-                        exp = new FoodExpense(id, tId, pId, pName, title, base, tax, 0, 0, date, notes);
-                    } else {
-                        exp = new Expense(id, tId, pId, pName, title, category, base, tax, date, notes);
-                    }
+                    // Polymorphic instantiation via ExpenseFactory across all categories
+                    Expense exp = ExpenseFactory.createExpenseWithFlatTax(category, id, tId, pId, pName, title, base, tax, date, notes);
                     list.add(exp);
                 }
                 return list;

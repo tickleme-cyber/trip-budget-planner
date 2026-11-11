@@ -5,9 +5,7 @@ import com.tripbudget.exceptions.BudgetExceededException;
 import com.tripbudget.exceptions.InvalidExpenseException;
 import com.tripbudget.exceptions.ValidationException;
 import com.tripbudget.models.Expense;
-import com.tripbudget.models.FlightExpense;
-import com.tripbudget.models.FoodExpense;
-import com.tripbudget.models.HotelExpense;
+import com.tripbudget.models.ExpenseFactory;
 import com.tripbudget.models.Traveler;
 import com.tripbudget.models.Trip;
 import com.tripbudget.util.StringUtils;
@@ -181,6 +179,9 @@ public class AddExpenseDialog extends JDialog {
         String taxText = StringUtils.safeTrim(txtTaxOrFee.getText());
         if (StringUtils.isNotBlank(taxText)) {
             tax = Double.parseDouble(taxText);
+            if (tax < 0) {
+                throw new InvalidExpenseException("Tax or extra fees cannot be negative: $" + tax, tax);
+            }
         }
 
         String category = (String) cmbCategory.getSelectedItem();
@@ -192,16 +193,8 @@ public class AddExpenseDialog extends JDialog {
         String notes = StringUtils.safeTrim(txtNotes.getText());
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        // Polymorphic creation based on category
-        if ("FLIGHT".equalsIgnoreCase(category)) {
-            return new FlightExpense(0, trip.getTripId(), payer.getTravelerId(), payer.getName(), title, base, tax, 0, 0, date, notes);
-        } else if ("HOTEL".equalsIgnoreCase(category)) {
-            return new HotelExpense(0, trip.getTripId(), payer.getTravelerId(), payer.getName(), title, base, 1, 0, date, notes);
-        } else if ("FOOD".equalsIgnoreCase(category)) {
-            return new FoodExpense(0, trip.getTripId(), payer.getTravelerId(), payer.getName(), title, base, tax, 0, 0, date, notes);
-        } else {
-            return new Expense(0, trip.getTripId(), payer.getTravelerId(), payer.getName(), title, category, base, tax, date, notes);
-        }
+        // Polymorphic creation via ExpenseFactory across all supported categories
+        return ExpenseFactory.createExpenseWithFlatTax(category, 0, trip.getTripId(), payer.getTravelerId(), payer.getName(), title, base, tax, date, notes);
     }
 
     private void showReceiptDialog(String receiptText) {
